@@ -1,0 +1,11 @@
+{
+	"files.associations": {
+		"chipmunk.h": "c",
+		"raylib.h": "c",
+		"config.h": "c",
+		"pthread.h": "c",
+		"player.h": "c",
+		"map.h": "c",
+		"hud.h": "c"
+	}
+}
