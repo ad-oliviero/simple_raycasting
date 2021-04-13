@@ -8,6 +8,7 @@
 extern	Vector2 linestart[128], linend[128],
 		border_s[4], border_e[4],
 		map1_s[4], map1_e[4];
+
 Vector2 linestart_s[MAP_SIDES] = {0}, linend_s[MAP_SIDES] = {0};
 
 int draw_map();
@@ -19,7 +20,7 @@ int mini_map() {
 	return 0;
 }
 
-int draw_map() {
+int draw_map(/*Map *map*/) {
 	memcpy(linestart_s, linestart, MAP_SIDES);
 	memcpy(linend_s, linend, MAP_SIDES);
 	for (int i = 0; i < MAP_SIDES; i++) {

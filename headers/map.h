@@ -3,6 +3,11 @@ In this file you must define all the map lines (in arrays) or just create a func
 */
 #include <raylib.h>
 
+typedef struct {
+	Vector2 start[128];
+	Vector2 end[128];
+} Map;
+
 Vector2 linestart[128] = {{10, 10}, {10, 100}, {100, 100}, {100, 200}, {225, 200}, {225, 5}, {350, 5},  {350, -40}, {100, -40}, {100, 10}};
 Vector2 linend[128] =  {{10, 100}, {100, 100}, {100, 200}, {225, 200}, {225, 5}, {350, 5}, {350, -40}, {100, -40}, {100, 10}, {10, 10}};
 
