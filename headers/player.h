@@ -1,3 +1,19 @@
+#include <raylib.h>
+
+typedef struct {
+	Vector2 position;
+	float angle;
+	float fov;
+	float speed;
+	int ray_count;
+	Vector2 rays[360];
+} Player;
+
+// player by reference, x and y coordinates, angle, fov, ray_count, speed (150 recommended)
+void init_player(Player *player, float x, float y, float angle, float fov, int ray_count, float speed);
 void player();
 void update_rays();
 void cast_rays();
+void p_controls();
+void get_closest_ray();
+float sort_collisions();

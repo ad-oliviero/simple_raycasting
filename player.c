@@ -3,46 +3,53 @@
 #include <stdio.h>
 #include <math.h>
 #include "headers/config.h"
-//#include "map.h"
+#include "headers/player.h"
 
-Vector2 rays[RAY_COUNT] = {0}, collision_point = {0}, p_pos = (Vector2) {100, 50};
-float p_rotation = 0, p_speed = 150, fov = 90;
-//int collision_index[RAY_COUNT + 1] = {0};
+Player local_player;
+Vector2 collision_point = {0};
 
-void player();
-void update_rays();
-void cast_rays();
-void   p_controls();
-void get_closest_ray();
-float sort_collisions();
+// x and y coordinates, angle, fov, ray_count, speed (150 recommended)
+void init_player(Player *player, float x, float y, float angle, float fov, int ray_count, float speed) {
+	player->position = (Vector2) {x, y};
+	player->angle = angle;
+	player->fov = fov;
+	player->ray_count = ray_count;
+	player->speed = speed;
+	for (int i = 0; i < player->ray_count; i++) {
+		float angle = (player->fov * PI / 180.0f * i / player->ray_count) + player->angle;
+		player->rays[i].x = 500 * cosf(angle) + player->position.x;
+		player->rays[i].y = 500 * sinf(angle) + player->position.y;
+		//DrawLineEx(player->position, player->rays[i], 1, GRAY);
+	}
+}
 
 void player() {
-	DrawCircleV(p_pos, 5, GREEN);
+	DrawCircleV(local_player.position, 5, GREEN);
 	update_rays();
 	p_controls();
-	//p_pos = GetMousePosition();
+	//local_player.position = GetMousePosition();
 }
 
 void p_controls() {
-	const Vector2 new_speed = {(p_speed + 150 * IsKeyDown(340)) * d_time, (p_speed + 150 * IsKeyDown(340)) * d_time};
-	p_rotation += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
-	p_pos.x += (-new_speed.x * IsKeyDown(65) + new_speed.x * IsKeyDown(68));
-	p_pos.y += (-new_speed.y * IsKeyDown(87) + new_speed.y * IsKeyDown(83));
-	/*const float new_speed = (p_speed + 150 * IsKeyDown(340)) * d_time;
-	p_rotation += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
-	p_pos.x += (-new_speed * IsKeyDown(65) + new_speed * IsKeyDown(68));
-	p_pos.y += (-new_speed * IsKeyDown(87) + new_speed * IsKeyDown(83));*/
-	//fov += GetMouseWheelMove() * 10 - 10 * (fov > 180) + 10 * (fov < 30);// * -500 * d_time;
-	//if (p_rotation > 6.28 || p_rotation < -6.28) p_rotation = 0;
+	const Vector2 new_speed = {(local_player.speed + 150 * IsKeyDown(340)) * d_time, (local_player.speed + 150 * IsKeyDown(340)) * d_time};
+	local_player.angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
+	local_player.position.x += (-new_speed.x * IsKeyDown(65) + new_speed.x * IsKeyDown(68));
+	local_player.position.y += (-new_speed.y * IsKeyDown(87) + new_speed.y * IsKeyDown(83));
+	/*const float new_speed = (local_player.speed + 150 * IsKeyDown(340)) * d_time;
+	local_player.angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
+	local_player.position.x += (-new_speed * IsKeyDown(65) + new_speed * IsKeyDown(68));
+	local_player.position.y += (-new_speed * IsKeyDown(87) + new_speed * IsKeyDown(83));*/
+	//local_player.fov += GetMouseWheelMove() * 10 - 10 * (local_player.fov > 180) + 10 * (local_player.fov < 30);// * -500 * d_time;
+	//if (local_player.angle > 6.28 || local_player.angle < -6.28) local_player.angle = 0;
 	// minimap block
-	if (p_pos.y < 15) p_pos.y -= -new_speed.y;
-	if (p_pos.y > 155) p_pos.y -= new_speed.y;
-	if (p_pos.x < 15) p_pos.x -= -new_speed.x;
-	if (p_pos.x > 230) p_pos.x -= new_speed.x;
-	/*if (p_pos.y < 15) p_pos.y = 155;
-	if (p_pos.y > 155) p_pos.y = 15;
-	if (p_pos.x < 15) p_pos.x = 230;
-	if (p_pos.x > 230) p_pos.x = 15;*/
+	if (local_player.position.y < 15) local_player.position.y -= -new_speed.y;
+	if (local_player.position.y > 155) local_player.position.y -= new_speed.y;
+	if (local_player.position.x < 15) local_player.position.x -= -new_speed.x;
+	if (local_player.position.x > 230) local_player.position.x -= new_speed.x;
+	/*if (local_player.position.y < 15) local_player.position.y = 155;
+	if (local_player.position.y > 155) local_player.position.y = 15;
+	if (local_player.position.x < 15) local_player.position.x = 230;
+	if (local_player.position.x > 230) local_player.position.x = 15;*/
 }
 
 void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e) { // https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
@@ -62,10 +69,10 @@ void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e) { /
 }
 
 void update_rays() {
-	for (int i = 0; i < RAY_COUNT; i++) {
-		float angle = (fov * PI / 180.0f * i / RAY_COUNT) + p_rotation;
-		rays[i].x = 500 * cosf(angle) + p_pos.x;
-		rays[i].y = 500 * sinf(angle) + p_pos.y;
-		//DrawLineEx(p_pos, rays[i], 1, GRAY);
+	for (int i = 0; i < local_player.ray_count; i++) {
+		float angle = (local_player.fov * PI / 180.0f * i / local_player.ray_count) + local_player.angle;
+		local_player.rays[i].x = 500 * cosf(angle) + local_player.position.x;
+		local_player.rays[i].y = 500 * sinf(angle) + local_player.position.y;
+		//DrawLineEx(local_player.position, local_player.rays[i], 1, GRAY);
 	}
 }

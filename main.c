@@ -6,6 +6,7 @@
 #include "headers/hud.h"
 
 double d_time;
+extern Player local_player;
 void log_level() {}
 
 int main() {
@@ -13,14 +14,16 @@ int main() {
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(WIDTH, HEIGHT, TITLE);
 
+	init_player(&local_player, 100, 50, 0, 90, 360, 150);
+
 	while (!WindowShouldClose()) {
 		d_time = GetFrameTime();
 		BeginDrawing();
 		ClearBackground(BLACK);
 		view_3d();
 		mini_map();
-		view();
 		player();
+		view();
 		DrawFPS(WIDTH - 100, HEIGHT - 20);
 		EndDrawing();
 	}
