@@ -13,7 +13,7 @@ typedef struct {
 void init_player(Player *player, float x, float y, float angle, float fov, int ray_count, float speed);
 void player();
 void update_rays();
-void cast_rays();
+void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point);
 void p_controls();
 void get_closest_ray();
 float sort_collisions();

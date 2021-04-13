@@ -6,7 +6,7 @@
 #include "headers/player.h"
 
 Player local_player;
-Vector2 collision_point = {0};
+//Vector2 collision_point = {0};
 
 // x and y coordinates, angle, fov, ray_count, speed (150 recommended)
 void init_player(Player *player, float x, float y, float angle, float fov, int ray_count, float speed) {
@@ -31,28 +31,40 @@ void player() {
 }
 
 void p_controls() {
-	const Vector2 new_speed = {(local_player.speed + 150 * IsKeyDown(340)) * d_time, (local_player.speed + 150 * IsKeyDown(340)) * d_time};
+	const Vector2 new_speed = {(local_player.speed + 100 * IsKeyDown(340)) * d_time, (local_player.speed + 100 * IsKeyDown(340)) * d_time};
+	if (IsKeyDown(65)) {
+		local_player.position.x += cos(local_player.angle - local_player.fov * 0.017 / 2) * new_speed.x;
+		local_player.position.y += sin(local_player.angle - local_player.fov * 0.017 / 2) * new_speed.y;
+	}
+	if (IsKeyDown(68)) {
+		local_player.position.x += -cos(local_player.angle - local_player.fov * 0.017 / 2) * new_speed.x;
+		local_player.position.y += -sin(local_player.angle - local_player.fov * 0.017 / 2) * new_speed.y;
+	}
+	if (IsKeyDown(87)) {
+		local_player.position.x += cos(local_player.angle + local_player.fov * 0.017 / 2) * new_speed.x;
+		local_player.position.y += sin(local_player.angle + local_player.fov * 0.017 / 2) * new_speed.y;
+	}
+	if (IsKeyDown(83)) {
+		local_player.position.x += -cos(local_player.angle + local_player.fov * 0.017 / 2) * new_speed.x;
+		local_player.position.y += -sin(local_player.angle + local_player.fov * 0.017 / 2) * new_speed.y;
+	}
 	local_player.angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
-	local_player.position.x += (-new_speed.x * IsKeyDown(65) + new_speed.x * IsKeyDown(68));
-	local_player.position.y += (-new_speed.y * IsKeyDown(87) + new_speed.y * IsKeyDown(83));
-	/*const float new_speed = (local_player.speed + 150 * IsKeyDown(340)) * d_time;
-	local_player.angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
-	local_player.position.x += (-new_speed * IsKeyDown(65) + new_speed * IsKeyDown(68));
-	local_player.position.y += (-new_speed * IsKeyDown(87) + new_speed * IsKeyDown(83));*/
+	//local_player.position.x += (-new_speed.y * IsKeyDown(65) + new_speed.y * IsKeyDown(68));
+	//local_player.position.y += (-new_speed.y * IsKeyDown(87) + new_speed.y * IsKeyDown(83));
 	//local_player.fov += GetMouseWheelMove() * 10 - 10 * (local_player.fov > 180) + 10 * (local_player.fov < 30);// * -500 * d_time;
 	//if (local_player.angle > 6.28 || local_player.angle < -6.28) local_player.angle = 0;
 	// minimap block
-	if (local_player.position.y < 15) local_player.position.y -= -new_speed.y;
-	if (local_player.position.y > 155) local_player.position.y -= new_speed.y;
 	if (local_player.position.x < 15) local_player.position.x -= -new_speed.x;
 	if (local_player.position.x > 230) local_player.position.x -= new_speed.x;
+	if (local_player.position.y < 15) local_player.position.y -= -new_speed.y;
+	if (local_player.position.y > 155) local_player.position.y -= new_speed.y;
 	/*if (local_player.position.y < 15) local_player.position.y = 155;
 	if (local_player.position.y > 155) local_player.position.y = 15;
 	if (local_player.position.x < 15) local_player.position.x = 230;
 	if (local_player.position.x > 230) local_player.position.x = 15;*/
 }
 
-void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e) { // https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
+void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point) { // https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
 	float	den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
 			num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
 			num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);
@@ -60,10 +72,8 @@ void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e) { /
 	float	u_a = num_a / den,
 			u_b = num_b / den;
 	if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1) {
-		collision_point = (Vector2) {
-			ray_s.x + u_a * (ray_e.x - ray_s.x),
-			ray_s.y + u_a * (ray_e.y - ray_s.y)
-		};
+		collision_point->x = ray_s.x + u_a * (ray_e.x - ray_s.x);
+		collision_point->y = ray_s.y + u_a * (ray_e.y - ray_s.y);
 	}
 	return;
 }

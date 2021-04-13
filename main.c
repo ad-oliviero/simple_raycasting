@@ -14,7 +14,7 @@ int main() {
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(WIDTH, HEIGHT, TITLE);
 
-	init_player(&local_player, 100, 50, 0, 90, 360, 150);
+	init_player(&local_player, 100, 50, -45 * PI / 180, 90, 360, 100);
 
 	while (!WindowShouldClose()) {
 		d_time = GetFrameTime();

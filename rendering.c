@@ -9,22 +9,22 @@ extern Player local_player;
 extern	Vector2	linestart[128], linend[128],
 		linestart_s[MAP_SIDES], linend_s[MAP_SIDES],
 		border_s[4], border_e[4],
-		map1_s[4], map1_e[4],
-		collision_point;
+		map1_s[4], map1_e[4];
+		//collision_point;
 float scene[360];
 
 void view() {
 	for (int i = 0; i < local_player.ray_count; i++) {
-		Vector2 closest = {0};
+		Vector2 closest = {0}, collision_point;
 		float record = INFINITY;
 		for (int j = 0; j < MAP_SIDES; j++) {
 			collision_point = (Vector2) {0, 0};
 			//cast_rays(local_player.rays[i], local_player.position, map1_s[j], map1_e[j]);
-			cast_rays(local_player.rays[i], local_player.position, border_s[0], border_e[0]);
-			cast_rays(local_player.rays[i], local_player.position, border_s[1], border_e[1]);
-			cast_rays(local_player.rays[i], local_player.position, border_s[2], border_e[2]);
-			cast_rays(local_player.rays[i], local_player.position, border_s[3], border_e[3]);
-			cast_rays(local_player.rays[i], local_player.position, linestart_s[j], linend_s[j]);
+			cast_rays(local_player.rays[i], local_player.position, border_s[0], border_e[0], &collision_point);
+			cast_rays(local_player.rays[i], local_player.position, border_s[1], border_e[1], &collision_point);
+			cast_rays(local_player.rays[i], local_player.position, border_s[2], border_e[2], &collision_point);
+			cast_rays(local_player.rays[i], local_player.position, border_s[3], border_e[3], &collision_point);
+			cast_rays(local_player.rays[i], local_player.position, linestart_s[j], linend_s[j], &collision_point);
 			if (collision_point.x && collision_point.y) {
 				float distance = sqrt(pow(local_player.position.x - collision_point.x, 2) + pow(local_player.position.y - collision_point.y, 2));
 				if (distance < record) {
