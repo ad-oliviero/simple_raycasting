@@ -13,6 +13,7 @@ int main() {
 	SetTraceLogCallback(log_level);
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(WIDTH, HEIGHT, TITLE);
+	SetTargetFPS(GetMonitorRefreshRate(0));
 	HideCursor();
 	init_player(&local_player, 100, 50, -45 * PI / 180, 90, 360, 50);
 

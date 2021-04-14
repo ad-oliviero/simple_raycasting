@@ -9,13 +9,12 @@ extern	Vector2	linestart[128], linend[128],
 		linestart_s[MAP_SIDES], linend_s[MAP_SIDES],
 		border_s[4], border_e[4],
 		map1_s[4], map1_e[4];
-		//collision_point;
 float scene[360];
 
 void view(Player *player) {
 	for (int i = 0; i < player->ray_count; i++) {
 		Vector2 closest = {0}, collision_point;
-		float record = INFINITY;
+		float lowest_value = INFINITY;
 		for (int j = 0; j < MAP_SIDES; j++) {
 			collision_point = (Vector2) {0, 0};
 			//cast_rays(player->rays[i], player->position, map1_s[j], map1_e[j]);
@@ -26,14 +25,14 @@ void view(Player *player) {
 			cast_rays(player->rays[i], player->position, linestart_s[j], linend_s[j], &collision_point);
 			if (collision_point.x && collision_point.y) {
 				float distance = sqrt(pow(player->position.x - collision_point.x, 2) + pow(player->position.y - collision_point.y, 2));
-				if (distance < record) {
-					record = distance;
+				if (distance < lowest_value) {
+					lowest_value = distance;
 					closest = collision_point;
 				}
 			}
 		}
 		DrawLineEx(player->position, closest, 1 * (closest.x && closest.y), RED);
-		scene[i] = record * (record != NAN);
+		scene[i] = lowest_value * (lowest_value != NAN);
 	}
 	return;
 }
@@ -44,8 +43,13 @@ float map(float value, float from1, float to1, float from2, float to2) {
 
 void view_3d(Player *player) {
 	for (int i = 0; i < (int) (sizeof(scene)/sizeof(scene[0])); i++) {
-		const float scene_width = WIDTH / player->ray_count * 1.1867;
+		const float scene_width = WIDTH / player->ray_count * player->fov * (PI / 180);
 		const float alpha = map(scene[i], 0, 150, 1, 0);
-		DrawLineEx((Vector2) {i * scene_width, (scene[i] * 3)}, (Vector2) {i * scene_width, (HEIGHT - (scene[i] * 3))}, scene_width, ColorAlpha(GRAY, alpha));
+
+		// remove fisheye effect (not so much)
+		const float ray_angle = player->angle + (i * 0.018);
+		const float norm_scene = scene[i] * 3 + sin(ray_angle) * 2;
+		
+		DrawLineEx((Vector2) {i * scene_width, norm_scene}, (Vector2) {i * scene_width, HEIGHT - norm_scene}, scene_width, ColorAlpha(GRAY, alpha));
 	}
 }

@@ -42,18 +42,18 @@ void p_controls(Player *player) {
 		-sin(player->angle + player->fov * 0.017 / 2) * new_speed.y * IsKeyDown(83);	// s
 
 	// minimap block
-	player->position.x +=
+	/*player->position.x +=
 		new_speed.x * (player->position.x < 15) +
-		-new_speed.x * (player->position.x > 230)/* +
-		new_speed.x * (player->position.y < 15) +
-		new_speed.x * (player->position.y > 155)*/;
+		-new_speed.x * (player->position.x > 230)// +
+		//new_speed.x * (player->position.y < 15) +
+		//new_speed.x * (player->position.y > 155);
 
 	player->position.y +=
-		/*new_speed.y * (player->position.x < 15) +
-		new_speed.y * (player->position.x > 230) +*/
+		//new_speed.y * (player->position.x < 15) +
+		//new_speed.y * (player->position.x > 230) +
 		new_speed.y * (player->position.y < 15) +
 		-new_speed.y * (player->position.y > 155);
-
+*/
 	player->angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
 	//local_player->angle += mouse_previous - GetMousePosition().x;
 	//local_player->fov += GetMouseWheelMove() * 10 - 10 * (local_player->fov > 180) + 10 * (local_player->fov < 30);// * -500 * d_time;
