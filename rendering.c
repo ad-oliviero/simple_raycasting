@@ -51,12 +51,12 @@ void view_3d(Player *player)
 {
 	for (int i = 0; i < (int)(sizeof(scene) / sizeof(scene[0])); i++)
 	{
-		const float scene_width = WIDTH / player->ray_count * player->fov * (PI / 180);
+		const float scene_width = WIDTH / (player->ray_count * player->fov * (PI / 180)) * 1.58;
 		const float alpha = map(scene[i], 0, 150, 1, 0);
 
 		// remove fisheye effect (not so much)
 		const float ray_angle = player->angle + (i * 0.018);
-		const float norm_scene = scene[i] * 3 + sin(ray_angle) * 2;
+		const float norm_scene = scene[i] * 3 + sin(ray_angle);
 
 		DrawLineEx((Vector2){i * scene_width, norm_scene}, (Vector2){i * scene_width, HEIGHT - norm_scene}, scene_width, ColorAlpha(GRAY, alpha));
 	}

@@ -7,6 +7,7 @@ typedef struct
 	float fov;
 	float speed;
 	int ray_count;
+	int ray_length;
 	Vector2 rays[360];
 } Player;
 

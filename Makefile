@@ -1,7 +1,7 @@
 CC = gcc
 FILES = main.c hud.c player.c rendering.c
 CFLAGS = -O3 -Wall -Wextra
-LDFLAGS = -lraylib -lm -lpthread
+LDFLAGS = -lraylib -lm -lpthread -lglfw
 NAME = "main"
 
 build:

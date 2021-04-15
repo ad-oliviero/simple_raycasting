@@ -1,3 +1,4 @@
+#include <GLFW/glfw3.h>
 #include <raylib.h>
 #include <stdio.h>
 #include "headers/config.h"
@@ -12,10 +13,12 @@ void log_level() {}
 int main()
 {
 	SetTraceLogCallback(log_level);
-	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+	SetConfigFlags(GLFW_CURSOR_NORMAL);
 	InitWindow(WIDTH, HEIGHT, TITLE);
 	SetTargetFPS(GetMonitorRefreshRate(0));
-	HideCursor();
+	// HideCursor();
+	DisableCursor();
 	init_player(&local_player, 100, 50, -45 * PI / 180, 90, 360, 50);
 
 	while (!WindowShouldClose())
@@ -27,7 +30,7 @@ int main()
 		mini_map();
 		player();
 		view(&local_player);
-		DrawFPS(WIDTH - 100, HEIGHT - 20);
+		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
 		EndDrawing();
 	}
 	CloseWindow();

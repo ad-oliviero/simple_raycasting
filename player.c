@@ -15,11 +15,12 @@ void init_player(Player *player, float x, float y, float angle, float fov, int r
 	player->fov = fov;
 	player->ray_count = ray_count;
 	player->speed = speed;
+	player->ray_length = GetScreenWidth() / 2;
 	for (int i = 0; i < player->ray_count; i++)
 	{
 		float angle = (player->fov * PI / 180.0f * i / player->ray_count) + player->angle;
-		player->rays[i].x = 400 * cosf(angle) + player->position.x;
-		player->rays[i].y = 400 * sinf(angle) + player->position.y;
+		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
+		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
 	}
 }
 
@@ -58,10 +59,13 @@ void p_controls(Player *player)
 		new_speed.y * (player->position.y < 15) +
 		-new_speed.y * (player->position.y > 155);
 */
-	player->angle += (-5 * IsKeyDown(263) + 5 * IsKeyDown(262)) * d_time;
-	//local_player->angle += mouse_previous - GetMousePosition().x;
-	//local_player->fov += GetMouseWheelMove() * 10 - 10 * (local_player->fov > 180) + 10 * (local_player->fov < 30);// * -500 * d_time;
-	//if (local_player->angle > 6.28 || local_player->angle < -6.28) local_player->angle = 0;
+	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
+	float angular_distance = acos((mouse_diff / player->ray_length)) - player->fov * (PI / 180);
+	if (GetMousePosition().x != WIDTH / 2)
+		SetMousePosition(WIDTH / 2, 0);
+	player->angle += -angular_distance;
+	if (angular_distance == NAN)
+		printf("%f %f\n", angular_distance, mouse_diff);
 }
 
 void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
@@ -86,8 +90,8 @@ void update_rays(Player *player)
 	for (int i = 0; i < player->ray_count; i++)
 	{
 		float angle = (player->fov * PI / 180.0f * i / player->ray_count) + player->angle;
-		player->rays[i].x = 500 * cosf(angle) + player->position.x;
-		player->rays[i].y = 500 * sinf(angle) + player->position.y;
-		//DrawLineEx(player->position, player->rays[i], 1, GRAY);
+		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
+		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
+		// DrawLineEx(player->position, player->rays[i], 1, GRAY);
 	}
 }
