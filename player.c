@@ -60,12 +60,17 @@ void p_controls(Player *player)
 		-new_speed.y * (player->position.y > 155);
 */
 	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
-	float angular_distance = acos((mouse_diff / player->ray_length)) - player->fov * (PI / 180);
+	if (mouse_diff > player->ray_length)
+	{
+		mouse_diff = player->ray_length;
+		printf("%f\n", mouse_diff);
+	}
+	if (mouse_diff < -player->ray_length)
+		mouse_diff = -player->ray_length;
+	float angular_distance = (acos((mouse_diff / player->ray_length)) - player->fov * (PI / 180));
 	if (GetMousePosition().x != WIDTH / 2)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance;
-	if (angular_distance == NAN)
-		printf("%f %f\n", angular_distance, mouse_diff);
 }
 
 void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
