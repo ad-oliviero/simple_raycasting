@@ -1,6 +1,7 @@
 #include <raylib.h>
 
-typedef struct {
+typedef struct
+{
 	Vector2 position;
 	float angle;
 	float fov;
