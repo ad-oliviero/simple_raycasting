@@ -19,7 +19,7 @@ int main()
 	// SetTargetFPS(GetMonitorRefreshRate(0));
 	// HideCursor();
 	DisableCursor();
-	init_player(&local_player, 100, 50, -45 * PI / 180, 90, 360, 50);
+	init_player(&local_player, 100, 50, -45 * PI / 180, 70, 360, 50);
 
 	while (!WindowShouldClose())
 	{

@@ -21,10 +21,10 @@ void view(Player *player)
 		{
 			collision_point = (Vector2){0, 0};
 			// cast_rays(player->rays[i], player->position, map1_s[j], map1_e[j], &collision_point);
-			cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
-			cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
-			cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
-			cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
+			// cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
+			// cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
+			// cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
+			// cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
 			cast_rays(player->rays[i], player->position, linestart_s[j], linend_s[j], &collision_point);
 			if (collision_point.x && collision_point.y)
 			{
@@ -55,8 +55,8 @@ void view_3d(Player *player)
 		const float alpha = map(scene[i], 0, 150, 1, -0.1);
 
 		// remove fisheye effect (not so much)
-		const float norm_scene = scene[i] * 2.5;
+		const float norm_scene = scene[i] * 2.5 - cos(player->ray_angle_from_center[i]) * 7;
 
-		DrawLineEx((Vector2){i * scene_width, norm_scene}, (Vector2){i * scene_width, HEIGHT - norm_scene}, scene_width, ColorAlpha(GRAY, alpha));
+		DrawLineEx((Vector2){i * scene_width + 1, norm_scene}, (Vector2){i * scene_width + 1, HEIGHT - norm_scene}, scene_width, ColorAlpha(GRAY, alpha));
 	}
 }
