@@ -16,7 +16,7 @@ int main()
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(GLFW_CURSOR_NORMAL);
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	SetTargetFPS(GetMonitorRefreshRate(0));
+	// SetTargetFPS(GetMonitorRefreshRate(0));
 	// HideCursor();
 	DisableCursor();
 	init_player(&local_player, 100, 50, -45 * PI / 180, 90, 360, 50);
@@ -28,7 +28,7 @@ int main()
 		ClearBackground(BLACK);
 		view_3d(&local_player);
 		mini_map();
-		player();
+		player(&local_player);
 		view(&local_player);
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
 		EndDrawing();

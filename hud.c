@@ -39,9 +39,9 @@ int draw_map(/*Map *map*/)
 
 	for (int i = 0; i < MAP_SIDES; i++)
 		DrawLineEx(linestart_s[i], linend_s[i], 1, BLACK);
-	/*DrawLineEx(map1_s[0], map1_e[0], 1, WHITE);
+	/* DrawLineEx(map1_s[0], map1_e[0], 1, WHITE);
 	DrawLineEx(map1_s[1], map1_e[1], 1, WHITE);
 	DrawLineEx(map1_s[2], map1_e[2], 1, WHITE);
-	DrawLineEx(map1_s[3], map1_e[3], 1, WHITE);*/
+	DrawLineEx(map1_s[3], map1_e[3], 1, WHITE); */
 	return 0;
 }

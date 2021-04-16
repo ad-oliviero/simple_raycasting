@@ -22,52 +22,59 @@ void init_player(Player *player, float x, float y, float angle, float fov, int r
 		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
 		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
 	}
+	for (int i = player->ray_count / 2; i > 0; i--)
+		player->ray_angle_from_center[i] = -i * PI / 180;
+	for (int i = player->ray_count / 2; i < player->ray_count; i++)
+		player->ray_angle_from_center[i] = i * PI / 180;
+	player->distance_between_rays = player->fov * PI / 180.0f / player->ray_count;
 }
 
-void player()
+void player(Player *player)
 {
-	DrawCircleV(local_player.position, 5, GREEN);
-	update_rays(&local_player);
-	p_controls(&local_player);
+	DrawCircleV(player->position, 5, GREEN);
+	update_rays(player);
+	p_controls(player);
 }
 
 void p_controls(Player *player)
 {
 	const Vector2 new_speed = {(player->speed + 100 * IsKeyDown(340)) * d_time, (player->speed + 100 * IsKeyDown(340)) * d_time};
 	player->position.x +=
-		cos(player->angle - player->fov * 0.017 / 2) * new_speed.x * IsKeyDown(65) +  // a
-		-cos(player->angle - player->fov * 0.017 / 2) * new_speed.x * IsKeyDown(68) + // d
-		cos(player->angle + player->fov * 0.017 / 2) * new_speed.x * IsKeyDown(87) +  // w
-		-cos(player->angle + player->fov * 0.017 / 2) * new_speed.x * IsKeyDown(83);  // s
+		cos(player->angle - player->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(65) +  // a
+		-cos(player->angle - player->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(68) + // d
+		cos(player->angle + player->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(87) +  // w
+		-cos(player->angle + player->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(83);  // s
 
 	player->position.y +=
-		sin(player->angle - player->fov * 0.017 / 2) * new_speed.y * IsKeyDown(65) +  // a
-		-sin(player->angle - player->fov * 0.017 / 2) * new_speed.y * IsKeyDown(68) + // d
-		sin(player->angle + player->fov * 0.017 / 2) * new_speed.y * IsKeyDown(87) +  // w
-		-sin(player->angle + player->fov * 0.017 / 2) * new_speed.y * IsKeyDown(83);  // s
+		sin(player->angle - player->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(65) +  // a
+		-sin(player->angle - player->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(68) + // d
+		sin(player->angle + player->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(87) +  // w
+		-sin(player->angle + player->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(83);  // s
 
 	// minimap block
-	/*player->position.x +=
+	/* player->position.x +=
 		new_speed.x * (player->position.x < 15) +
-		-new_speed.x * (player->position.x > 230)// +
-		//new_speed.x * (player->position.y < 15) +
-		//new_speed.x * (player->position.y > 155);
+		-new_speed.x * (player->position.x > 230) / * +
+												  new_speed.x * (player->position.y < 15) +
+												  new_speed.x * (player->position.y > 155) * /
+		;
 
 	player->position.y +=
-		//new_speed.y * (player->position.x < 15) +
-		//new_speed.y * (player->position.x > 230) +
+		/ * new_speed.y * (player->position.x < 15) +
+		new_speed.y * (player->position.x > 230) + * /
 		new_speed.y * (player->position.y < 15) +
-		-new_speed.y * (player->position.y > 155);
-*/
+		-new_speed.y * (player->position.y > 155); */
+
+	if (player->position.y < 15)
+	{
+		player->position.y += new_speed.y;
+	}
 	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
 	if (mouse_diff > player->ray_length)
-	{
 		mouse_diff = player->ray_length;
-		printf("%f\n", mouse_diff);
-	}
 	if (mouse_diff < -player->ray_length)
 		mouse_diff = -player->ray_length;
-	float angular_distance = (acos((mouse_diff / player->ray_length)) - player->fov * (PI / 180));
+	float angular_distance = (acos((mouse_diff / player->ray_length)) - 90 * (PI / 180));
 	if (GetMousePosition().x != WIDTH / 2)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance;
