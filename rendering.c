@@ -11,9 +11,9 @@ extern Vector2 linestart[128], linend[128],
 	map1_s[4], map1_e[4];
 float scene[360];
 
-void view(Player *player)
+void view(Player *player, Settings *settings)
 {
-	for (int i = 0; i < player->ray_count; i++)
+	for (int i = 0; i < settings->ray_count; i++)
 	{
 		Vector2 closest = {0}, collision_point;
 		float lowest_value = INFINITY;
@@ -47,16 +47,16 @@ float map(float value, float from1, float to1, float from2, float to2)
 	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 }
 
-void view_3d(Player *player)
+void view_3d(Player *player, Settings *settings)
 {
-	for (int i = 0; i < player->ray_count; i++)
+	for (int i = 0; i < settings->ray_count; i++)
 	{
-		const float scene_width = (float)WIDTH / player->ray_count;
-		const float alpha = map(scene[i], 0, 150, 1, -0.1);
+		const float scene_width = (float)WIDTH / settings->ray_count;
+		const float alpha = map(scene[i], 0, 200, 1, -0.1);
 
 		// remove fisheye effect (not so much)
-		const float norm_scene = scene[i] * 2.5 - cos(player->ray_angle_from_center[i]) * 7;
+		const float norm_scene = scene[i] * scene_width / 2 - cos(player->ray_angle_from_center[i]) / (scene[i] * scene_width * 9);
 
-		DrawLineEx((Vector2){i * scene_width + 1, norm_scene}, (Vector2){i * scene_width + 1, HEIGHT - norm_scene}, scene_width, ColorAlpha(GRAY, alpha));
+		DrawLineEx((Vector2){i * scene_width + 1, norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2)}, (Vector2){i * scene_width + 1, HEIGHT - (norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2))}, scene_width, ColorAlpha(GRAY, alpha));
 	}
 }
