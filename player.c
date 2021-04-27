@@ -9,7 +9,7 @@
 Player local_player;
 Settings local_settings;
 
-// player by reference, x and y coordinates, angle, fov, ray_count, speed (150 recommended)
+// player by reference, x and y coordinates, angle
 void init_player(Player *player, Settings *settings, float x, float y, float angle)
 {
 	player->position = (Vector2){x, y};
@@ -30,11 +30,12 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
 }
 
-void init_settings(Settings *settings, float fov, int ray_count, float speed)
+void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility)
 {
 	settings->fov = fov;
 	settings->ray_count = ray_count;
 	settings->speed = speed;
+	settings->mouse_sensibility = mouse_sensibility;
 }
 
 void player(Player *player, Settings *settings)
@@ -46,7 +47,7 @@ void player(Player *player, Settings *settings)
 
 void p_controls(Player *player, Settings *settings)
 {
-	const Vector2 new_speed = {(settings->speed + 100 * IsKeyDown(340)) * d_time, (settings->speed + 100 * IsKeyDown(340)) * d_time};
+	const Vector2 new_speed = {(settings->speed + (settings->speed * 1.5 * IsKeyDown(340))) * d_time, (settings->speed + 100 * IsKeyDown(340)) * d_time};
 	player->position.x +=
 		cos(player->angle - settings->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(65) +	 // a
 		-cos(player->angle - settings->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(68) + // d
@@ -59,7 +60,7 @@ void p_controls(Player *player, Settings *settings)
 		sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(87) +	 // w
 		-sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(83);	 // s
 
-	// minimap block
+	// minimap block, TODO: FIX THIS
 	/* player->position.x +=
 		new_speed.x * (player->position.x < 15) +
 		-new_speed.x * (player->position.x > 230) / * +
@@ -82,7 +83,7 @@ void p_controls(Player *player, Settings *settings)
 	float angular_distance = (acos((mouse_diff / player->ray_length)) - 90 * (PI / 180));
 	if (GetMousePosition().x != WIDTH / 2)
 		SetMousePosition(WIDTH / 2, 0);
-	player->angle += -angular_distance * 0.38;
+	player->angle += -angular_distance * (settings->mouse_sensibility / 100);
 }
 
 void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)

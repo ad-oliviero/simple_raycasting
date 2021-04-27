@@ -22,7 +22,7 @@ int main()
 	DisableCursor();
 	// initializing local variables for player and settings
 	init_player(&local_player, &local_settings, 100, 50, -45 * PI / 180);
-	init_settings(&local_settings, 70, 360, 50);
+	init_settings(&local_settings, "Name", 70, 360, 30, 38);
 
 	// main game loop
 	while (!WindowShouldClose())

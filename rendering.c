@@ -57,6 +57,10 @@ void view_3d(Player *player, Settings *settings)
 		// remove fisheye effect (not so much)
 		const float norm_scene = scene[i] * scene_width / 2 - cos(player->ray_angle_from_center[i]) / (scene[i] * scene_width * 9);
 
-		DrawLineEx((Vector2){i * scene_width + 1, norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2)}, (Vector2){i * scene_width + 1, HEIGHT - (norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2))}, scene_width, ColorAlpha(GRAY, alpha));
+		// drawing every "3d" line
+		DrawLineEx((Vector2){i * scene_width + 1, norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2)},
+				   (Vector2){i * scene_width + 1, HEIGHT - (norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2))},
+				   scene_width,
+				   ColorAlpha(GRAY, alpha));
 	}
 }
