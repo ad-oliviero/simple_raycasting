@@ -12,7 +12,7 @@ extern Vector2 linestart[128], linend[128],
 float scene[360];
 
 void view(Player *player, Settings *settings)
-{
+{ // here we raycast the rays and get the closest hit
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		Vector2 closest = {0}, collision_point;
@@ -43,12 +43,12 @@ void view(Player *player, Settings *settings)
 }
 
 float map(float value, float from1, float to1, float from2, float to2)
-{
+{ // just a math function that i had to write myself.
 	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 }
 
 void view_3d(Player *player, Settings *settings)
-{
+{ // here i get the intersections and transform them into a "3d" view
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		const float scene_width = (float)WIDTH / settings->ray_count;

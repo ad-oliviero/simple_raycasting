@@ -12,6 +12,7 @@ void log_level() {}
 
 int main()
 {
+	// initializing raylib
 	SetTraceLogCallback(log_level);
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
@@ -19,21 +20,28 @@ int main()
 	// SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 	// HideCursor();
 	DisableCursor();
+	// initializing local variables for player and settings
 	init_player(&local_player, &local_settings, 100, 50, -45 * PI / 180);
 	init_settings(&local_settings, 70, 360, 50);
 
+	// main game loop
 	while (!WindowShouldClose())
 	{
 		d_time = GetFrameTime();
+		// drawing
 		BeginDrawing();
 		ClearBackground(BLACK);
+
 		view_3d(&local_player, &local_settings);
 		mini_map();
 		player(&local_player, &local_settings);
 		view(&local_player, &local_settings);
+
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
 		EndDrawing();
 	}
+
+	// closing program
 	CloseWindow();
 	printf("Program closed successfully!\n");
 	return 0;
