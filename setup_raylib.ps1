@@ -5,4 +5,4 @@ Set-Location raylib-git/src/
 make PLATFORM=PLATFORM_DESKTOP
 Copy-Item libraylib.a ../../raylib/
 Copy-Item raylib.h ../../raylib/include/
-cd ../../
+Set-Location ../../
