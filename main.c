@@ -1,6 +1,5 @@
-#include <GLFW/glfw3.h>
-#include <raylib.h>
 #include <stdio.h>
+#include "raylib/include/raylib.h"
 #include "headers/config.h"
 #include "headers/player.h"
 #include "headers/rendering.h"
@@ -14,9 +13,9 @@ int main()
 {
 	SetTraceLogCallback(log_level);
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-	SetConfigFlags(GLFW_CURSOR_NORMAL);
+	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	// SetTargetFPS(GetMonitorRefreshRate(0));
+	// SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
 	// HideCursor();
 	DisableCursor();
 	init_player(&local_player, 100, 50, -45 * PI / 180, 70, 360, 50);

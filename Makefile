@@ -1,7 +1,8 @@
 CC = gcc
-FILES = main.c hud.c player.c rendering.c
+SRC = .
+FILES = $(SRC)/main.c $(SRC)/hud.c $(SRC)/player.c $(SRC)/rendering.c
 CFLAGS = -O3 -Wall -Wextra
-LDFLAGS = -lraylib -lm -lpthread -lglfw
+LDFLAGS = -lm -lpthread -lglfw -L $(SRC)/raylib -l:libraylib.a -lpthread -lm -ldl
 NAME = "main"
 
 build:

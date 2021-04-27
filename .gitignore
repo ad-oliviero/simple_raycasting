@@ -1,3 +1,5 @@
 *.vscode
 main
 .prettierrc
+raylib/
+raylib-git/
