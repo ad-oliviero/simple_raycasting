@@ -1,4 +1,4 @@
-#include <raylib.h>
+#include "raylib/include/raylib.h"
 #include <pthread.h>
 #include <stdio.h>
 #include <math.h>
@@ -81,7 +81,9 @@ void p_controls(Player *player)
 }
 
 void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
-{ // https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
+{ /* https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
+     also i know that raylib has a CheckCollisionLines() function, but i can't get it working, fell free to uncomment it and try. */
+	// CheckCollisionLines(ray_s, ray_e, wall_s, wall_e, collision_point);
 	float den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
 		  num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
 		  num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);

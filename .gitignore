@@ -3,3 +3,5 @@ main
 .prettierrc
 raylib/
 raylib-git/
+*~
+*.exe

@@ -1,7 +1,7 @@
 /*
 In this file you must define all the map lines (in arrays) or just create a function to generate it randomly
 */
-#include <raylib.h>
+#include "../raylib/include/raylib.h"
 
 typedef struct
 {
