@@ -5,9 +5,9 @@ typedef struct
 	Vector2 position;
 	float angle;
 	int ray_length;
-	float ray_angle_from_center[720];
+	float ray_angle_from_center[360];
 	float distance_between_rays;
-	Vector2 rays[7200]; // CHANGE THIS
+	Vector2 rays[360]; // CHANGE THIS
 } Player;
 
 typedef struct
@@ -15,8 +15,9 @@ typedef struct
 	float speed;
 	float fov;
 	float mouse_sensibility;
-	float ray_count;
+	int ray_count;
 	char user_name[128];
+	float scene[360];
 } Settings;
 
 // player by reference, x and y coordinates, angle, fov, ray_count, speed (150 recommended)

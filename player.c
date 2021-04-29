@@ -6,17 +6,12 @@
 #include "headers/config.h"
 #include "headers/player.h"
 
-Player local_player;
-Settings local_settings;
-
 // player by reference, x and y coordinates, angle
 void init_player(Player *player, Settings *settings, float x, float y, float angle)
 {
 	player->position = (Vector2){x, y};
 	player->angle = angle;
 	player->ray_length = 200;
-	// free(player->rays);
-	// player->rays = malloc(settings->ray_count * 2);
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
@@ -36,6 +31,7 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 	settings->ray_count = ray_count;
 	settings->speed = speed;
 	settings->mouse_sensibility = mouse_sensibility;
+	sprintf(settings->user_name, "%s", user_name);
 }
 
 void player(Player *player, Settings *settings)

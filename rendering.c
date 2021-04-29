@@ -1,6 +1,7 @@
 #include "raylib/include/raylib.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <malloc.h>
 #include <math.h>
 #include "headers/config.h"
 #include "headers/player.h"
@@ -9,7 +10,6 @@ extern Vector2 linestart[128], linend[128],
 	linestart_s[MAP_SIDES], linend_s[MAP_SIDES],
 	border_s[4], border_e[4],
 	map1_s[4], map1_e[4];
-float scene[360];
 
 void view(Player *player, Settings *settings)
 { // here we raycast the rays and get the closest hit
@@ -37,7 +37,7 @@ void view(Player *player, Settings *settings)
 			}
 		}
 		DrawLineEx(player->position, closest, 1 * (closest.x && closest.y), RED);
-		scene[i] = lowest_value * (lowest_value != NAN);
+		settings->scene[i] = lowest_value * (lowest_value != NAN);
 	}
 	return;
 }
@@ -52,10 +52,10 @@ void view_3d(Player *player, Settings *settings)
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		const float scene_width = (float)WIDTH / settings->ray_count;
-		const float alpha = map(scene[i], 0, 200, 1, -0.1);
+		const float alpha = map(settings->scene[i], 0, 200, 1, -0.1);
 
 		// remove fisheye effect (not so much)
-		const float norm_scene = scene[i] * scene_width / 2 - cos(player->ray_angle_from_center[i]) / (scene[i] * scene_width * 9);
+		const float norm_scene = settings->scene[i] * scene_width / 2 - cos(player->ray_angle_from_center[i]) / (settings->scene[i] * scene_width * 9);
 
 		// drawing every "3d" line
 		DrawLineEx((Vector2){i * scene_width + 1, norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2)},
