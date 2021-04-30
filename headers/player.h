@@ -1,5 +1,4 @@
 #include "../raylib/include/raylib.h"
-
 typedef struct
 {
 	Vector2 position;

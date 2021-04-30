@@ -1,2 +1,2 @@
-int mini_map();
-int draw_map(/*Map *map*/);
+void draw_map();
+void draw_hud();

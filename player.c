@@ -36,7 +36,9 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 
 void player(Player *player, Settings *settings)
 {
-	DrawCircleV(player->position, 5, GREEN);
+	// DrawTriangle((Vector2){player->position.x + 15, player->position.y + 50}, (Vector2){player->position.x - 15, player->position.y - 50}, (Vector2){player->position.x - 40, player->position.y + 50}, GREEN);
+	// DrawTriangle((Vector2){WIDTH / 2 + 15, HEIGHT / 2 + 50}, (Vector2){WIDTH / 2 - 15, HEIGHT / 2 - 50}, (Vector2){WIDTH / 2 - 40, HEIGHT / 2 + 50}, GREEN);
+	// DrawCircleV(player->position, 5, GREEN);
 	update_rays(player, settings);
 	p_controls(player, settings);
 }

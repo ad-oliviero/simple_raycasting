@@ -19,11 +19,11 @@ int main()
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	// SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()));
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
 	// HideCursor();
 	DisableCursor();
 	// initializing local variables for player and settings
-	init_settings(local_settings, "Name", 70, tmp_ray_count, 40, 38);
+	init_settings(local_settings, "Name", 100, tmp_ray_count, 40, 38);
 	init_player(local_player, local_settings, 100, 50, -45 * PI / 180);
 
 	// main game loop
@@ -35,7 +35,7 @@ int main()
 		ClearBackground(BLACK);
 
 		view_3d(local_player, local_settings);
-		mini_map();
+		draw_hud();
 		player(local_player, local_settings);
 		view(local_player, local_settings);
 

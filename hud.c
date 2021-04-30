@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include "headers/config.h"
+#include "headers/hud.h"
 #include "headers/map.h"
 #include "headers/player.h"
+#include "headers/rendering.h"
 
 extern Vector2 linestart[128], linend[128],
 	border_s[4], border_e[4],
@@ -11,18 +13,18 @@ extern Vector2 linestart[128], linend[128],
 
 Vector2 linestart_s[MAP_SIDES] = {0}, linend_s[MAP_SIDES] = {0};
 
-int draw_map();
-
-int mini_map()
+void draw_hud()
 {
-	DrawRectangleRec((Rectangle){10, 10, 225, 150}, WHITE); // map background
-	//for (int i = 0; i < 4; i++) DrawLineEx(border_s[i], border_e[i], 3, RED); // map background
+	DrawLineEx((Vector2){WIDTH / 2, HEIGHT / 2 - 10}, (Vector2){WIDTH / 2, HEIGHT / 2 + 10}, 2, WHITE);
+	DrawLineEx((Vector2){WIDTH / 2 - 10, HEIGHT / 2}, (Vector2){WIDTH / 2 + 10, HEIGHT / 2}, 2, WHITE);
+	// DrawCircle(WIDTH / 2, HEIGHT / 2, 4, BLACK);
 	draw_map();
-	return 0;
 }
 
-int draw_map(/*Map *map*/)
+void draw_map(/*Map *map*/)
 {
+	DrawRectangleRec((Rectangle){10, 10, 225, 150}, WHITE); // map background
+	// for (int i = 0; i < 4; i++)DrawLineEx(border_s[i], border_e[i], 3, RED); // map background
 	memcpy(linestart_s, linestart, MAP_SIDES);
 	memcpy(linend_s, linend, MAP_SIDES);
 	for (int i = 0; i < MAP_SIDES; i++)
@@ -43,5 +45,4 @@ int draw_map(/*Map *map*/)
 	DrawLineEx(map1_s[1], map1_e[1], 1, WHITE);
 	DrawLineEx(map1_s[2], map1_e[2], 1, WHITE);
 	DrawLineEx(map1_s[3], map1_e[3], 1, WHITE); */
-	return 0;
 }
