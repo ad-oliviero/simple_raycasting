@@ -19,7 +19,7 @@ int main()
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
+	// SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
 	// HideCursor();
 	DisableCursor();
 	// initializing local variables for player and settings
@@ -36,8 +36,8 @@ int main()
 
 		view_3d(local_player, local_settings);
 		draw_hud();
-		player(local_player, local_settings);
 		view(local_player, local_settings);
+		player(local_player, local_settings);
 
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
 		EndDrawing();

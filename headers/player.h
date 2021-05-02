@@ -24,5 +24,3 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility);
 void player(Player *player, Settings *settings);
 void p_controls(Player *player, Settings *settings);
-void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point);
-void update_rays(Player *player, Settings *settings);

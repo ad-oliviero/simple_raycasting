@@ -36,10 +36,9 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 
 void player(Player *player, Settings *settings)
 {
-	// DrawTriangle((Vector2){player->position.x + 15, player->position.y + 50}, (Vector2){player->position.x - 15, player->position.y - 50}, (Vector2){player->position.x - 40, player->position.y + 50}, GREEN);
+	// DrawTriangle((Vector2){player->position.x + 2, player->position.y + 7}, (Vector2){player->position.x - 2, player->position.y - 7}, (Vector2){player->position.x - 6, player->position.y + 7}, GREEN);
 	// DrawTriangle((Vector2){WIDTH / 2 + 15, HEIGHT / 2 + 50}, (Vector2){WIDTH / 2 - 15, HEIGHT / 2 - 50}, (Vector2){WIDTH / 2 - 40, HEIGHT / 2 + 50}, GREEN);
-	// DrawCircleV(player->position, 5, GREEN);
-	update_rays(player, settings);
+	DrawCircleV(player->position, 5, GREEN);
 	p_controls(player, settings);
 }
 
@@ -70,9 +69,9 @@ void p_controls(Player *player, Settings *settings)
 		/ * new_speed.y * (player->position.x < 15) +
 		new_speed.y * (player->position.x > 230) + * /
 		new_speed.y * (player->position.y < 15) +
-		-new_speed.y * (player->position.y > 155); */
+		-new_speed.y * (player->position.y > 155);
 
-	player->position.y += new_speed.y * (player->position.y < 15);
+	player->position.y += new_speed.y * (player->position.y < 15); */
 	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
 	if (mouse_diff > player->ray_length)
 		mouse_diff = player->ray_length;
@@ -82,29 +81,6 @@ void p_controls(Player *player, Settings *settings)
 	if (GetMousePosition().x != WIDTH / 2)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance * (settings->mouse_sensibility / 100);
-}
-
-void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
-{ /* https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-     also i know that raylib has a CheckCollisionLines() function, but i can't get it working, fell free to uncomment it and try. */
-	// CheckCollisionLines(ray_s, ray_e, wall_s, wall_e, collision_point);
-	float den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
-		  num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
-		  num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);
-	if (den == 0)
-		return; // parallel lines
-	float u_a = num_a / den,
-		  u_b = num_b / den;
-	if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1)
-	{
-		collision_point->x = ray_s.x + u_a * (ray_e.x - ray_s.x);
-		collision_point->y = ray_s.y + u_a * (ray_e.y - ray_s.y);
-	}
-	return;
-}
-
-void update_rays(Player *player, Settings *settings)
-{
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;

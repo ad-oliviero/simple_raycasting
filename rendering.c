@@ -64,3 +64,22 @@ void view_3d(Player *player, Settings *settings)
 				   ColorAlpha(GRAY, alpha));
 	}
 }
+
+void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
+{ /* https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
+     also i know that raylib has a CheckCollisionLines() function, but i can't get it working, fell free to uncomment it and try. */
+	// CheckCollisionLines(ray_s, ray_e, wall_s, wall_e, collision_point);
+	float den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
+		  num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
+		  num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);
+	if (den == 0)
+		return; // parallel lines
+	float u_a = num_a / den,
+		  u_b = num_b / den;
+	if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1)
+	{
+		collision_point->x = ray_s.x + u_a * (ray_e.x - ray_s.x);
+		collision_point->y = ray_s.y + u_a * (ray_e.y - ray_s.y);
+	}
+	return;
+}
