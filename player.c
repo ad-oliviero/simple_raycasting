@@ -57,21 +57,12 @@ void p_controls(Player *player, Settings *settings)
 		sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(87) +	 // w
 		-sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(83);	 // s
 
-	// minimap block, TODO: FIX THIS
-	/* player->position.x +=
-		new_speed.x * (player->position.x < 15) +
-		-new_speed.x * (player->position.x > 230) / * +
-												  new_speed.x * (player->position.y < 15) +
-												  new_speed.x * (player->position.y > 155) * /
-		;
-
+	// minimap block
+	player->position.x +=
+		2 * new_speed.x * (player->position.x < 15) - 2 * new_speed.x * (player->position.x > 230);
 	player->position.y +=
-		/ * new_speed.y * (player->position.x < 15) +
-		new_speed.y * (player->position.x > 230) + * /
-		new_speed.y * (player->position.y < 15) +
-		-new_speed.y * (player->position.y > 155);
+		2 * new_speed.y * (player->position.y < 15) - 2 * new_speed.y * (player->position.y > 155);
 
-	player->position.y += new_speed.y * (player->position.y < 15); */
 	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
 	if (mouse_diff > player->ray_length)
 		mouse_diff = player->ray_length;
