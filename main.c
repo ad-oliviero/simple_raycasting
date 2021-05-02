@@ -34,7 +34,7 @@ int main()
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		view_3d(local_player, local_settings);
+		view_3d(/* local_player,  */ local_settings);
 		draw_hud();
 		view(local_player, local_settings);
 		player(local_player, local_settings);

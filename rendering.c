@@ -11,10 +11,30 @@ extern Vector2 linestart[128], linend[128],
 	border_s[4], border_e[4],
 	map1_s[4], map1_e[4];
 
+void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
+{ /* https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
+     also i know that raylib has a CheckCollisionLines() function, but i can't get it working, fell free to uncomment it and try. */
+	// CheckCollisionLines(ray_s, ray_e, wall_s, wall_e, collision_point);
+	float den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
+		  num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
+		  num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);
+	if (den == 0)
+		return; // parallel lines
+	float u_a = num_a / den,
+		  u_b = num_b / den;
+	if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1)
+	{
+		collision_point->x = ray_s.x + u_a * (ray_e.x - ray_s.x);
+		collision_point->y = ray_s.y + u_a * (ray_e.y - ray_s.y);
+	}
+	return;
+}
+
 void view(Player *player, Settings *settings)
 { // here we raycast the rays and get the closest hit
 	for (int i = 0; i < settings->ray_count; i++)
 	{
+		// DrawLineEx(player->position, player->rays[i], 1, GRAY); // draw all rays, for debugging
 		Vector2 closest = {0}, collision_point;
 		float lowest_value = INFINITY;
 		for (int j = 0; j < MAP_SIDES; j++)
@@ -37,49 +57,30 @@ void view(Player *player, Settings *settings)
 			}
 		}
 		DrawLineEx(player->position, closest, 1 * (closest.x && closest.y), RED);
-		settings->scene[i] = lowest_value * (lowest_value != NAN);
+		settings->distance[i] = lowest_value * (lowest_value != NAN);
 	}
 	return;
 }
 
-float map(float value, float from1, float to1, float from2, float to2)
+float map_value(float value, float from1, float to1, float from2, float to2)
 { // just a math function that i had to write myself.
 	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 }
 
-void view_3d(Player *player, Settings *settings)
+void view_3d(/* Player *player,  */ Settings *settings)
 { // here i get the intersections and transform them into a "3d" view
 	for (int i = 0; i < settings->ray_count; i++)
 	{
-		const float scene_width = (float)WIDTH / settings->ray_count;
-		const float alpha = map(settings->scene[i], 0, 200, 1, -0.1);
+		float distance_width = (float)WIDTH / settings->ray_count;
+		float alpha = map_value(settings->distance[i], 0, 200, 1, -0.1);
 
-		// remove fisheye effect (not so much)
-		const float norm_scene = settings->scene[i] * scene_width / 2 - cos(player->ray_angle_from_center[i]) / (settings->scene[i] * scene_width * 9);
+		// we will use this to remove fisheye effect
+		float norm_distance = settings->distance[i] * 2;
 
 		// drawing every "3d" line
-		DrawLineEx((Vector2){i * scene_width + 1, norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2)},
-				   (Vector2){i * scene_width + 1, HEIGHT - (norm_scene * (norm_scene < HEIGHT / 2) + HEIGHT / 2 * (norm_scene > HEIGHT / 2))},
-				   scene_width,
+		DrawLineEx((Vector2){i * distance_width + 1, norm_distance * (norm_distance < HEIGHT / 2) + HEIGHT / 2 * (norm_distance > HEIGHT / 2)},
+				   (Vector2){i * distance_width + 1, HEIGHT - (norm_distance * (norm_distance < HEIGHT / 2) + HEIGHT / 2 * (norm_distance > HEIGHT / 2))},
+				   distance_width,
 				   ColorAlpha(GRAY, alpha));
 	}
-}
-
-void cast_rays(Vector2 ray_s, Vector2 ray_e, Vector2 wall_s, Vector2 wall_e, Vector2 *collision_point)
-{ /* https://web.archive.org/web/20060911055655/http://local.wasp.uwa.edu.au/~pbourke/geometry/lineline2d/
-     also i know that raylib has a CheckCollisionLines() function, but i can't get it working, fell free to uncomment it and try. */
-	// CheckCollisionLines(ray_s, ray_e, wall_s, wall_e, collision_point);
-	float den = (wall_e.y - wall_s.y) * (ray_e.x - ray_s.x) - (wall_e.x - wall_s.x) * (ray_e.y - ray_s.y),
-		  num_a = (wall_e.x - wall_s.x) * (ray_s.y - wall_s.y) - (wall_e.y - wall_s.y) * (ray_s.x - wall_s.x),
-		  num_b = (ray_e.x - ray_s.x) * (ray_s.y - wall_s.y) - (ray_e.y - ray_s.y) * (ray_s.x - wall_s.x);
-	if (den == 0)
-		return; // parallel lines
-	float u_a = num_a / den,
-		  u_b = num_b / den;
-	if (u_a >= 0 && u_a <= 1 && u_b >= 0 && u_b <= 1)
-	{
-		collision_point->x = ray_s.x + u_a * (ray_e.x - ray_s.x);
-		collision_point->y = ray_s.y + u_a * (ray_e.y - ray_s.y);
-	}
-	return;
 }

@@ -44,6 +44,7 @@ void player(Player *player, Settings *settings)
 
 void p_controls(Player *player, Settings *settings)
 {
+	// position
 	const Vector2 new_speed = {(settings->speed + (settings->speed * 1.5 * IsKeyDown(340))) * d_time, (settings->speed + 100 * IsKeyDown(340)) * d_time};
 	player->position.x +=
 		cos(player->angle - settings->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(65) +	 // a
@@ -57,12 +58,7 @@ void p_controls(Player *player, Settings *settings)
 		sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(87) +	 // w
 		-sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(83);	 // s
 
-	// minimap block
-	player->position.x +=
-		2 * new_speed.x * (player->position.x < 15) - 2 * new_speed.x * (player->position.x > 230);
-	player->position.y +=
-		2 * new_speed.y * (player->position.y < 15) - 2 * new_speed.y * (player->position.y > 155);
-
+	// rotation
 	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
 	if (mouse_diff > player->ray_length)
 		mouse_diff = player->ray_length;
@@ -77,6 +73,22 @@ void p_controls(Player *player, Settings *settings)
 		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
 		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
 		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
-		// DrawLineEx(player->position, player->rays[i], 1, GRAY);
+	}
+	p_collide(player, settings, new_speed);
+}
+
+void p_collide(Player *player, Settings *settings, Vector2 speed)
+{
+	// minimap borders
+	player->position.x +=
+		2 * speed.x * (player->position.x < 15) - 2 * speed.x * (player->position.x > 230);
+	player->position.y +=
+		2 * speed.y * (player->position.y < 15) - 2 * speed.y * (player->position.y > 155);
+	for (int i = 0; i < settings->ray_count; i++)
+	{
+		if (settings->distance[i] < 4)
+		{
+			player->position.x += 2 * speed.x;
+		}
 	}
 }
