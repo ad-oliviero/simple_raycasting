@@ -1,4 +1,4 @@
-#include "raylib/include/raylib.h"
+#include "lib/raylib/include/raylib.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <malloc.h>
@@ -35,7 +35,7 @@ void view(Player *player, Settings *settings)
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		// DrawLineEx(player->position, player->rays[i], 1, GRAY); // draw all rays, for debugging
-		Vector2 closest = {0}, collision_point;
+		Vector2 /* closest = {0} ,*/ collision_point;
 		float lowest_value = INFINITY;
 		for (int j = 0; j < MAP_SIDES; j++)
 		{
@@ -52,11 +52,11 @@ void view(Player *player, Settings *settings)
 				if (distance < lowest_value)
 				{
 					lowest_value = distance;
-					closest = collision_point;
+					// closest = collision_point;
 				}
 			}
 		}
-		DrawLineEx(player->position, closest, 1 * (closest.x && closest.y), RED);
+		// DrawLineEx(player->position, closest, 1 * (closest.x && closest.y), RED);
 		settings->distance[i] = lowest_value * (lowest_value != NAN);
 	}
 	return;

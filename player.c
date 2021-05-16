@@ -2,9 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "raylib/include/raylib.h"
+#include "lib/raylib/include/raylib.h"
 #include "headers/config.h"
 #include "headers/player.h"
+
+extern bool movement_enabled;
 
 // player by reference, x and y coordinates, angle
 void init_player(Player *player, Settings *settings, float x, float y, float angle)
@@ -37,7 +39,6 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 
 void player(Player *player, Settings *settings)
 {
-	p_draw_on_map(player, settings);
 	// DrawCircleV(player->position, 5, GREEN);
 	p_controls(player, settings);
 }
@@ -45,7 +46,7 @@ void player(Player *player, Settings *settings)
 void p_controls(Player *player, Settings *settings)
 {
 	// position
-	const Vector2 new_speed = {(settings->speed + (settings->speed * 1.5 * IsKeyDown(340))) * d_time, (settings->speed + 100 * IsKeyDown(340)) * d_time};
+	const Vector2 new_speed = {(settings->speed + (settings->speed * 1.5 * IsKeyDown(340))) * d_time * movement_enabled, (settings->speed + 100 * IsKeyDown(340)) * d_time * movement_enabled};
 	player->position.x +=
 		cos(player->angle - settings->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(65) +	 // a
 		-cos(player->angle - settings->fov * (PI / 180) / 2) * new_speed.x * IsKeyDown(68) + // d
@@ -59,7 +60,7 @@ void p_controls(Player *player, Settings *settings)
 		-sin(player->angle + settings->fov * (PI / 180) / 2) * new_speed.y * IsKeyDown(83);	 // s
 
 	// rotation
-	float mouse_diff = GetMousePosition().x - GetScreenWidth() / 2;
+	float mouse_diff = (GetMousePosition().x - GetScreenWidth() / 2) * movement_enabled;
 	if (mouse_diff > player->ray_length)
 		mouse_diff = player->ray_length;
 	if (mouse_diff < -player->ray_length)

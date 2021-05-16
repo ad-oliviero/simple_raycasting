@@ -1,8 +1,9 @@
 *.vscode
 main
 .prettierrc
-raylib/
-raylib-git/
+lib/raylib/
+lib/raylib-git/
+lib/raygui/
 *~
 *.exe
 *.o

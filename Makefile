@@ -1,10 +1,11 @@
 CC = gcc
 SRC = .
+LIBS = $(SRC)/lib/
 FILES = $(SRC)/main.c $(SRC)/hud.c $(SRC)/player.c $(SRC)/rendering.c
 OBJS = $(SRC)/main.o $(SRC)/hud.o $(SRC)/player.o $(SRC)/rendering.o
 CFLAGS = -O3
-LDFLAGS = -L $(SRC)/raylib -l:libraylib.a -lm -ldl -lm -lpthread -lglfw
-WLDFLAGS = -I include/ -L $(SRC)/raylib -l:libraylib.a -lopengl32 -lgdi32 -lwinmm -lwinpthread
+LDFLAGS = -L $(SRC)/$(LIBS)/raylib -l:libraylib.a -lm -ldl -lm -lpthread -lglfw
+WLDFLAGS = -I include/ -L $(SRC)/$(LIBS)/raylib -l:libraylib.a -lopengl32 -lgdi32 -lwinmm -lwinpthread
 NAME = "smprc"
 
 build: main hud player rendering

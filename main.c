@@ -1,22 +1,26 @@
 #include <stdio.h>
 #include <malloc.h>
-#include "raylib/include/raylib.h"
+#include "lib/raylib/include/raylib.h"
+#define RAYGUI_IMPLEMENTATION
+#define RAYGUI_SUPPORT_ICONS
+#include "lib/raygui/src/raygui.h"
 #include "headers/config.h"
 #include "headers/player.h"
 #include "headers/rendering.h"
 #include "headers/hud.h"
 
 double d_time;
+// some global bools
+bool display_settings = false, movement_enabled = true;
+
 void log_level() {}
 
 int main(int argc, char **argv)
 {
 #ifdef DEBUG
-	printf("Debugging started with %i args: ", argc);
+	printf("Debugging started with %i args: ", argc - 1);
 	for (int i = 0; i < argc; i++)
-	{
 		printf("%s ", argv[i]);
-	}
 	printf("\n");
 #endif
 	const int tmp_ray_count = 360;
@@ -44,11 +48,12 @@ int main(int argc, char **argv)
 		ClearBackground(BLACK);
 
 		view_3d(/* local_player,  */ local_settings);
-		draw_hud();
 		view(local_player, local_settings);
+		draw_hud(local_player, local_settings);
 		player(local_player, local_settings);
 
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
+
 		EndDrawing();
 	}
 
