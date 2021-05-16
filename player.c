@@ -102,6 +102,5 @@ void p_draw_on_map(Player *player, Settings *settings)
 				   5 * sinf(player->angle + 3.0f) + player->position.y};
 	Vector2 t_C = {5 * cosf(player->angle - 1.1f) + player->position.x,
 				   5 * sinf(player->angle - 1.1f) + player->position.y};
-	// DrawTriangleLines(t_A, t_B, t_C, BLUE);
-	DrawTriangle(t_B, t_A, t_C, GREEN);
+	DrawTriangle(t_B, t_A, t_C, BLUE);
 }

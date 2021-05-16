@@ -9,8 +9,16 @@
 double d_time;
 void log_level() {}
 
-int main()
+int main(int argc, char **argv)
 {
+#ifdef DEBUG
+	printf("Debugging started with %i args: ", argc);
+	for (int i = 0; i < argc; i++)
+	{
+		printf("%s ", argv[i]);
+	}
+	printf("\n");
+#endif
 	const int tmp_ray_count = 360;
 	Player *local_player = (Player *)malloc(sizeof(Player));		 // + sizeof(int[tmp_ray_count]);
 	Settings *local_settings = (Settings *)malloc(sizeof(Settings)); // + sizeof(int[tmp_ray_count]);
@@ -22,6 +30,7 @@ int main()
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
 	HideCursor();
 	DisableCursor();
+	SetExitKey(KEY_NULL); // disabling quit on "KEY_ESCAPE" press
 	// initializing local variables for player and settings
 	init_settings(local_settings, "Name", 100, tmp_ray_count, 40, 38);
 	init_player(local_player, local_settings, 100, 50, -45 * PI / 180);
@@ -45,6 +54,8 @@ int main()
 
 	// closing program
 	CloseWindow();
-	printf("Program closed successfully!\n");
+#ifdef DEBUG
+	printf("%s closed correctly!\n", argv[0]);
+#endif
 	return 0;
 }

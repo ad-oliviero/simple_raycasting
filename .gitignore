@@ -5,3 +5,4 @@ raylib/
 raylib-git/
 *~
 *.exe
+*.o
