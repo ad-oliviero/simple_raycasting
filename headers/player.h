@@ -5,6 +5,7 @@ typedef struct
 	float angle;
 	int ray_length;
 	float ray_angle_from_center[360];
+	float ray_angle_from_start[360];
 	float distance_between_rays;
 	Vector2 rays[360];
 } Player;
@@ -25,3 +26,4 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 void player(Player *player, Settings *settings);
 void p_controls(Player *player, Settings *settings);
 void p_collide(Player *player, Settings *settings, Vector2 speed);
+void p_draw_on_map(Player *player, Settings *settings);

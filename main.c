@@ -19,8 +19,8 @@ int main()
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	// SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
-	// HideCursor();
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
+	HideCursor();
 	DisableCursor();
 	// initializing local variables for player and settings
 	init_settings(local_settings, "Name", 100, tmp_ray_count, 40, 38);

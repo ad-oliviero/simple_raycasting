@@ -14,14 +14,15 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 	player->ray_length = 200;
 	for (int i = 0; i < settings->ray_count; i++)
 	{
-		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
-		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
-		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
+		player->ray_angle_from_start[i] = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
+		player->rays[i].x = player->ray_length * cosf(player->ray_angle_from_start[i]) + player->position.x;
+		player->rays[i].y = player->ray_length * sinf(player->ray_angle_from_start[i]) + player->position.y;
 	}
-	for (int i = settings->ray_count / 2; i > 0; i--)
-		player->ray_angle_from_center[i] = -i * PI / 180;
-	for (int i = settings->ray_count / 2; i < settings->ray_count; i++)
-		player->ray_angle_from_center[i] = i * PI / 180;
+	for (int i = 1; i < settings->ray_count / 2 + 1; i++)
+	{
+		player->ray_angle_from_center[180 - i] = (i * PI / 180);
+		player->ray_angle_from_center[180 + i] = (i * PI / 180);
+	}
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
 }
 
@@ -36,9 +37,8 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 
 void player(Player *player, Settings *settings)
 {
-	// DrawTriangle((Vector2){player->position.x + 2, player->position.y + 7}, (Vector2){player->position.x - 2, player->position.y - 7}, (Vector2){player->position.x - 6, player->position.y + 7}, GREEN);
-	// DrawTriangle((Vector2){WIDTH / 2 + 15, HEIGHT / 2 + 50}, (Vector2){WIDTH / 2 - 15, HEIGHT / 2 - 50}, (Vector2){WIDTH / 2 - 40, HEIGHT / 2 + 50}, GREEN);
-	DrawCircleV(player->position, 5, GREEN);
+	p_draw_on_map(player, settings);
+	// DrawCircleV(player->position, 5, GREEN);
 	p_controls(player, settings);
 }
 
@@ -84,11 +84,24 @@ void p_collide(Player *player, Settings *settings, Vector2 speed)
 		2 * speed.x * (player->position.x < 15) - 2 * speed.x * (player->position.x > 230);
 	player->position.y +=
 		2 * speed.y * (player->position.y < 15) - 2 * speed.y * (player->position.y > 155);
-	for (int i = 0; i < settings->ray_count; i++)
+	/* for (int i = 0; i < settings->ray_count; i++)
 	{
 		if (settings->distance[i] < 4)
 		{
 			player->position.x += 2 * speed.x;
 		}
-	}
+	} */
+}
+
+void p_draw_on_map(Player *player, Settings *settings)
+{
+	// the triangle's vertices are named clockwise from A to C
+	Vector2 t_A = {7 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
+				   7 * sinf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.y};
+	Vector2 t_B = {5 * cosf(player->angle + 3.0f) + player->position.x,
+				   5 * sinf(player->angle + 3.0f) + player->position.y};
+	Vector2 t_C = {5 * cosf(player->angle - 1.1f) + player->position.x,
+				   5 * sinf(player->angle - 1.1f) + player->position.y};
+	// DrawTriangleLines(t_A, t_B, t_C, BLUE);
+	DrawTriangle(t_B, t_A, t_C, GREEN);
 }
