@@ -1,4 +1,8 @@
 #include "lib/raylib/include/raylib.h"
+#define RAYGUI_IMPLEMENTATION
+#define RAYGUI_SUPPORT_ICONS
+#define RAYGUI_STATIC
+#include "lib/raygui/src/raygui.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -29,7 +33,7 @@ void draw_hud(Player *player, Settings *settings)
 	if (display_settings)
 	{
 		EnableCursor();
-		draw_settings();
+		draw_settings(settings);
 	}
 	// DrawCircle(WIDTH / 2, HEIGHT / 2, 4, BLACK);
 }
@@ -61,8 +65,16 @@ void draw_map(/*Map *map*/ Player *player, Settings *settings)
 	p_draw_on_map(player, settings);
 }
 
-void draw_settings()
+void draw_settings(Settings *settings)
 {
+	Rectangle main_settings_rec = {WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2},
+			  ray_count_slider = {main_settings_rec.x + 70, main_settings_rec.y + 10, 200, 20},
+			  quit_button = {main_settings_rec.x + 70, main_settings_rec.y + 500, 200, 20};
 	DrawRectangle(0, 0, WIDTH, HEIGHT, ColorAlpha(BLACK, 0.9)); // obfuscate background
-																// DrawRectangle()
+	// GuiGroupBox(main_settings_rec, "Settings");
+	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
+	settings->ray_count = GuiSlider(ray_count_slider, "Ray count", NULL, settings->ray_count, 10, 360);
+	if (GuiButton(quit_button, "Quit game"))
+		printf("yes");
+	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
 }

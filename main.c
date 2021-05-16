@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <malloc.h>
 #include "lib/raylib/include/raylib.h"
-#define RAYGUI_IMPLEMENTATION
-#define RAYGUI_SUPPORT_ICONS
 #include "lib/raygui/src/raygui.h"
 #include "headers/config.h"
 #include "headers/player.h"
@@ -34,6 +32,7 @@ int main(int argc, char **argv)
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
 	HideCursor();
 	DisableCursor();
+	GuiLoadStyle("./lib/raygui/styles/cyber/cyber.rgs");
 	SetExitKey(KEY_NULL); // disabling quit on "KEY_ESCAPE" press
 	// initializing local variables for player and settings
 	init_settings(local_settings, "Name", 100, tmp_ray_count, 40, 38);
