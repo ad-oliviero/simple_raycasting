@@ -1,13 +1,13 @@
 #include "../lib/raylib/include/raylib.h"
+#define RAY_MAX_COUNT 1000
 typedef struct
 {
 	Vector2 position;
 	float angle;
-	int ray_length;
-	float ray_angle_from_center[360];
-	float ray_angle_from_start[360];
+	float ray_angle_from_center[RAY_MAX_COUNT];
+	float ray_angle_from_start[RAY_MAX_COUNT];
 	float distance_between_rays;
-	Vector2 rays[360];
+	Vector2 rays[RAY_MAX_COUNT];
 } Player;
 
 typedef struct
@@ -18,8 +18,10 @@ typedef struct
 	int ray_count;
 	bool vsync;
 	bool player_map_icon;
+	bool fisheye_correction;
+	int ray_length;
 	char user_name[128];
-	float distance[360];
+	float distance[RAY_MAX_COUNT];
 } Settings;
 
 // player by reference, x and y coordinates, angle, fov, ray_count, speed (150 recommended)

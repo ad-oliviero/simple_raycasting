@@ -67,12 +67,12 @@ float map_value(float value, float from1, float to1, float from2, float to2)
 	return (value - from1) / (to1 - from1) * (to2 - from2) + from2;
 }
 
-void view_3d(/* Player *player,  */ Settings *settings)
+void view_3d(Player *player, Settings *settings)
 { // here i get the intersections and transform them into a "3d" view
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		float distance_width = (float)WIDTH / settings->ray_count;
-		float alpha = map_value(settings->distance[i], 0, 200, 1, -0.1);
+		float alpha = map_value(settings->distance[i], 0, 200, 1, -0.01);
 
 		// we will use this to remove fisheye effect
 		float norm_distance = settings->distance[i] * 2;

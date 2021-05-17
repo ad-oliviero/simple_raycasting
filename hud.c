@@ -28,6 +28,7 @@ void draw_hud(Player *player, Settings *settings)
 	{
 		display_settings = !display_settings;
 		movement_enabled = !movement_enabled;
+		SetMousePosition(WIDTH / 2, HEIGHT / 2);
 		if (display_settings)
 			EnableCursor();
 		else
@@ -68,32 +69,52 @@ void draw_map(/*Map *map*/ Player *player, Settings *settings)
 void draw_settings(Settings *settings)
 {
 	Rectangle main_settings_rec = {WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2},
-			  ray_count_slider = {main_settings_rec.x + 10, main_settings_rec.y + 10, 200, 20},
-			  quit_button = {main_settings_rec.x + main_settings_rec.width / 2 - 35, main_settings_rec.y + main_settings_rec.height - 30, 70, 20},
-			  vsync_button = {main_settings_rec.x + 10, main_settings_rec.y + 40, 200, 20},
-			  player_map_icon_button = {main_settings_rec.x + 10, main_settings_rec.y + 60, 200, 20};
-	DrawRectangle(0, 0, WIDTH, HEIGHT, ColorAlpha(BLACK, 0.7)); // obfuscate background
-	GuiGroupBox(main_settings_rec, "Settings");
-	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
-	settings->ray_count = GuiSlider(ray_count_slider, NULL, "Ray count", settings->ray_count, 10, 360);
-	if (GuiButton(quit_button, "Quit game"))
-	{
-		CloseWindow();
-		exit(0);
-	}
-	char vsync_text[] = "Disable Vsync";
-	if (!settings->vsync)
-		sprintf(vsync_text, "Enable Vsync");
-	if (GuiButton(vsync_button, vsync_text))
-	{
-		settings->vsync = !settings->vsync;
-		SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2 * settings->vsync);
-	}
-	char pmib_text[] = "Set Circle\0\0";
-	if (!settings->player_map_icon)
-		sprintf(pmib_text, "Set Triangle");
+			  ray_count_slider = {main_settings_rec.x + 10, main_settings_rec.y + 35, 200, 20},
+			  vsync_toggle = {main_settings_rec.x + 10, ray_count_slider.y + 30, 200, 20},
+			  player_map_icon_button = {main_settings_rec.x + 10, vsync_toggle.y + 30, 200, 20},
+			  fov_slider = {main_settings_rec.x + 10, player_map_icon_button.y + 30, 200, 20},
+			  mouse_sensibility_slider = {main_settings_rec.x + 10, fov_slider.y + 30, 200, 20},
+			  fisheye_toggle = {main_settings_rec.x + 10, mouse_sensibility_slider.y + 30, 200, 20},
+			  quit_button = {main_settings_rec.x + main_settings_rec.width / 2 - 35, main_settings_rec.y + main_settings_rec.height - 30, 70, 20};
 
-	if (GuiButton(player_map_icon_button, pmib_text))
-		settings->player_map_icon = !settings->player_map_icon;
-	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
+	DrawRectangle(0, 0, WIDTH, HEIGHT, ColorAlpha(BLACK, 0.7)); // obfuscate background
+	// GuiGroupBox(main_settings_rec, "Settings");
+	if (!GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings"))
+	{
+		settings->ray_count = GuiSlider(ray_count_slider, NULL, "Ray count", settings->ray_count, 10, RAY_MAX_COUNT);
+
+		char vsync_text[] = "Disable Vsync";
+		if (!settings->vsync)
+			sprintf(vsync_text, "Enable Vsync");
+		settings->vsync = GuiToggle(vsync_toggle, vsync_text, settings->vsync);
+		SetTargetFPS((GetMonitorRefreshRate(GetCurrentMonitor()) + 1) * settings->vsync);
+
+		char pmib_text[] = "Set Circle\0\0";
+		if (!settings->player_map_icon)
+			sprintf(pmib_text, "Set Triangle");
+		if (GuiButton(player_map_icon_button, pmib_text))
+			settings->player_map_icon = !settings->player_map_icon;
+
+		settings->fov = GuiSlider(fov_slider, NULL, "FOV", settings->fov, 0, 270);
+
+		settings->mouse_sensibility = GuiSlider(mouse_sensibility_slider, NULL, "Mouse sensibility", settings->mouse_sensibility, 0, 200);
+
+		settings->fisheye_correction = GuiToggle(fisheye_toggle, "Toggle Fisheye - NOT WORKING", settings->fisheye_correction);
+
+		if (GuiButton(quit_button, "Quit game"))
+		{
+			CloseWindow();
+			exit(0);
+		}
+	}
+	else
+	{
+		display_settings = !display_settings;
+		movement_enabled = !movement_enabled;
+		SetMousePosition(WIDTH / 2, HEIGHT / 2);
+		if (display_settings)
+			EnableCursor();
+		else
+			DisableCursor();
+	}
 }

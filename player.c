@@ -13,12 +13,11 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 {
 	player->position = (Vector2){x, y};
 	player->angle = angle;
-	player->ray_length = 200;
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		player->ray_angle_from_start[i] = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
-		player->rays[i].x = player->ray_length * cosf(player->ray_angle_from_start[i]) + player->position.x;
-		player->rays[i].y = player->ray_length * sinf(player->ray_angle_from_start[i]) + player->position.y;
+		player->rays[i].x = settings->ray_length * cosf(player->ray_angle_from_start[i]) + player->position.x;
+		player->rays[i].y = settings->ray_length * sinf(player->ray_angle_from_start[i]) + player->position.y;
 	}
 	for (int i = 1; i < settings->ray_count / 2 + 1; i++)
 	{
@@ -32,10 +31,12 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 {
 	settings->fov = fov;
 	settings->ray_count = ray_count;
+	settings->ray_length = 200;
 	settings->speed = speed;
 	settings->mouse_sensibility = mouse_sensibility;
 	settings->vsync = true;
 	settings->player_map_icon = true; // if true the triangle will be displayed, else the circle
+	settings->fisheye_correction = true;
 	sprintf(settings->user_name, "%s", user_name);
 }
 
@@ -63,19 +64,19 @@ void p_controls(Player *player, Settings *settings)
 
 	// rotation
 	float mouse_diff = (GetMousePosition().x - GetScreenWidth() / 2) * movement_enabled;
-	if (mouse_diff > player->ray_length)
-		mouse_diff = player->ray_length;
-	if (mouse_diff < -player->ray_length)
-		mouse_diff = -player->ray_length;
-	float angular_distance = (acos((mouse_diff / player->ray_length)) - 90 * (PI / 180));
+	if (mouse_diff > settings->ray_length)
+		mouse_diff = settings->ray_length;
+	if (mouse_diff < -settings->ray_length)
+		mouse_diff = -settings->ray_length;
+	float angular_distance = (acos((mouse_diff / settings->ray_length)) - 90 * (PI / 180));
 	if (GetMousePosition().x != WIDTH / 2 && movement_enabled)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance * (settings->mouse_sensibility / 100);
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
-		player->rays[i].x = player->ray_length * cosf(angle) + player->position.x;
-		player->rays[i].y = player->ray_length * sinf(angle) + player->position.y;
+		player->rays[i].x = settings->ray_length * cosf(angle) + player->position.x;
+		player->rays[i].y = settings->ray_length * sinf(angle) + player->position.y;
 	}
 	p_collide(player, settings, new_speed);
 }

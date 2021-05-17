@@ -9,7 +9,7 @@
 
 double d_time;
 // some global bools
-bool display_settings = false, movement_enabled = true, vsync = true;
+bool display_settings = false, movement_enabled = true;
 
 void log_level() {}
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
-	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
+	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) + 1);
 	// HideCursor();
 	DisableCursor();
 	GuiLoadStyle("./lib/raygui/styles/cyber/cyber.rgs");
@@ -45,13 +45,12 @@ int main(int argc, char **argv)
 		// drawing
 		BeginDrawing();
 
-		view_3d(/* local_player,  */ local_settings);
+		view_3d(local_player, local_settings);
 		view(local_player, local_settings);
 		draw_hud(local_player, local_settings);
 		player(local_player, local_settings);
 
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
-
 		ClearBackground(BLACK);
 		EndDrawing();
 	}
