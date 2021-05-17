@@ -11,7 +11,7 @@ NAME = "smprc"
 build: main hud player rendering
 	$(CC) $(CFLAGS) $(OBJS) -o $(NAME) $(LDFLAGS)
 
-build_windows:
+build_windows: main hud player rendering
 	$(CC) $(CFLAGS) -Wl,--subsystem,windows $(FILES) -o $(NAME) $(WLDFLAGS)
 
 main:
