@@ -71,10 +71,11 @@ void draw_settings(Settings *settings)
 	Rectangle main_settings_rec = {WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2},
 			  ray_count_slider = {main_settings_rec.x + 10, main_settings_rec.y + 35, 200, 20},
 			  vsync_toggle = {main_settings_rec.x + 10, ray_count_slider.y + 30, 200, 20},
-			  player_map_icon_button = {main_settings_rec.x + 10, vsync_toggle.y + 30, 200, 20},
-			  fov_slider = {main_settings_rec.x + 10, player_map_icon_button.y + 30, 200, 20},
+			  directional_rays_button = {main_settings_rec.x + 10, vsync_toggle.y + 30, 200, 20},
+			  fov_slider = {main_settings_rec.x + 10, directional_rays_button.y + 30, 200, 20},
 			  mouse_sensibility_slider = {main_settings_rec.x + 10, fov_slider.y + 30, 200, 20},
 			  fisheye_toggle = {main_settings_rec.x + 10, mouse_sensibility_slider.y + 30, 200, 20},
+			  show_rays_toggle = {main_settings_rec.x + 10, fisheye_toggle.y + 30, 200, 20},
 			  quit_button = {main_settings_rec.x + main_settings_rec.width / 2 - 35, main_settings_rec.y + main_settings_rec.height - 30, 70, 20};
 
 	DrawRectangle(0, 0, WIDTH, HEIGHT, ColorAlpha(BLACK, 0.7)); // obfuscate background
@@ -83,23 +84,18 @@ void draw_settings(Settings *settings)
 	{
 		settings->ray_count = GuiSlider(ray_count_slider, NULL, "Ray count", settings->ray_count, 10, RAY_MAX_COUNT);
 
-		char vsync_text[] = "Disable Vsync";
-		if (!settings->vsync)
-			sprintf(vsync_text, "Enable Vsync");
-		settings->vsync = GuiToggle(vsync_toggle, vsync_text, settings->vsync);
+		settings->vsync = GuiToggle(vsync_toggle, "Vsync", settings->vsync);
 		SetTargetFPS((GetMonitorRefreshRate(GetCurrentMonitor()) + 1) * settings->vsync);
 
-		char pmib_text[] = "Set Circle\0\0";
-		if (!settings->player_map_icon)
-			sprintf(pmib_text, "Set Triangle");
-		if (GuiButton(player_map_icon_button, pmib_text))
-			settings->player_map_icon = !settings->player_map_icon;
+		settings->directional_rays_enabled = GuiToggle(directional_rays_button, "Directional Rays", settings->directional_rays_enabled);
 
-		settings->fov = GuiSlider(fov_slider, NULL, "FOV", settings->fov, 0, 270);
+		settings->fov = GuiSlider(fov_slider, NULL, "FOV", settings->fov, 0, 160);
 
 		settings->mouse_sensibility = GuiSlider(mouse_sensibility_slider, NULL, "Mouse sensibility", settings->mouse_sensibility, 0, 200);
 
 		settings->fisheye_correction = GuiToggle(fisheye_toggle, "Toggle Fisheye - NOT WORKING", settings->fisheye_correction);
+
+		settings->show_rays = GuiToggle(show_rays_toggle, "Show full colliding rays", settings->show_rays);
 
 		if (GuiButton(quit_button, "Quit game"))
 		{

@@ -7,6 +7,8 @@ typedef struct
 	float ray_angle_from_center[RAY_MAX_COUNT];
 	float ray_angle_from_start[RAY_MAX_COUNT];
 	float distance_between_rays;
+	Vector2 colliding_rays[RAY_MAX_COUNT];
+	Vector2 directional_rays[RAY_MAX_COUNT];
 	Vector2 rays[RAY_MAX_COUNT];
 } Player;
 
@@ -17,8 +19,9 @@ typedef struct
 	float mouse_sensibility;
 	int ray_count;
 	bool vsync;
-	bool player_map_icon;
+	bool directional_rays_enabled;
 	bool fisheye_correction;
+	bool show_rays;
 	int ray_length;
 	char user_name[128];
 	float distance[RAY_MAX_COUNT];

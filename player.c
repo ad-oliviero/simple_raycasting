@@ -35,14 +35,14 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 	settings->speed = speed;
 	settings->mouse_sensibility = mouse_sensibility;
 	settings->vsync = true;
-	settings->player_map_icon = true; // if true the triangle will be displayed, else the circle
+	settings->directional_rays_enabled = true; // if true the triangle will be displayed, else the circle
 	settings->fisheye_correction = true;
+	settings->show_rays = false;
 	sprintf(settings->user_name, "%s", user_name);
 }
 
 void player(Player *player, Settings *settings)
 {
-	DrawCircleV(player->position, 5 * !settings->player_map_icon, BLUE);
 	p_controls(player, settings);
 }
 
@@ -72,11 +72,21 @@ void p_controls(Player *player, Settings *settings)
 	if (GetMousePosition().x != WIDTH / 2 && movement_enabled)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance * (settings->mouse_sensibility / 100);
+
+	// updating actual rays
 	for (int i = 0; i < settings->ray_count; i++)
 	{
 		float angle = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
 		player->rays[i].x = settings->ray_length * cosf(angle) + player->position.x;
 		player->rays[i].y = settings->ray_length * sinf(angle) + player->position.y;
+	}
+
+	// updating directional rays
+	for (int i = 0; i < 100; i++)
+	{
+		float angle = (settings->fov * PI / 180.0f * i / 100) + player->angle;
+		player->directional_rays[i].x = settings->ray_length / 10 * cosf(angle) + player->position.x;
+		player->directional_rays[i].y = settings->ray_length / 10 * sinf(angle) + player->position.y;
 	}
 	p_collide(player, settings, new_speed);
 }
@@ -100,11 +110,17 @@ void p_collide(Player *player, Settings *settings, Vector2 speed)
 void p_draw_on_map(Player *player, Settings *settings)
 {
 	// the triangle's vertices are named clockwise from A to C
-	Vector2 t_A = {6 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
+	/* Vector2 t_A = {6 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
 				   6 * sinf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.y};
 	Vector2 t_B = {3 * cosf(player->angle + 3.0f) + player->position.x,
 				   3 * sinf(player->angle + 3.0f) + player->position.y};
 	Vector2 t_C = {3 * cosf(player->angle - 1.1f) + player->position.x,
 				   3 * sinf(player->angle - 1.1f) + player->position.y};
-	DrawTriangle(t_B, t_A, t_C, BLUE);
+	DrawTriangle(t_B, t_A, t_C, BLUE); */
+	// DrawCircleV(player->position, 3, BLUE);
+	DrawCircleGradient(player->position.x, player->position.y, 10, BLUE, ColorAlpha(WHITE, 0));
+	for (int i = 0; i < settings->ray_count * settings->show_rays; i++)
+		DrawLineEx(player->position, player->colliding_rays[i], 1 * (player->colliding_rays[i].x && player->colliding_rays[i].y), RED);
+	for (int i = 0; i < settings->ray_count * settings->directional_rays_enabled; i++)
+		DrawLineEx(player->position, player->directional_rays[i], 1 * (player->directional_rays[i].x && player->directional_rays[i].y), ColorAlpha(BLUE, 0.05));
 }
