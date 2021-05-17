@@ -28,13 +28,13 @@ void draw_hud(Player *player, Settings *settings)
 	{
 		display_settings = !display_settings;
 		movement_enabled = !movement_enabled;
-		DisableCursor();
+		if (display_settings)
+			EnableCursor();
+		else
+			DisableCursor();
 	}
 	if (display_settings)
-	{
-		EnableCursor();
 		draw_settings(settings);
-	}
 	// DrawCircle(WIDTH / 2, HEIGHT / 2, 4, BLACK);
 }
 
@@ -75,6 +75,9 @@ void draw_settings(Settings *settings)
 	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
 	settings->ray_count = GuiSlider(ray_count_slider, "Ray count", NULL, settings->ray_count, 10, 360);
 	if (GuiButton(quit_button, "Quit game"))
-		printf("yes");
+	{
+		CloseWindow();
+		exit(0);
+	}
 	// GuiWindowBox((Rectangle){WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2}, "Settings");
 }

@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	SetConfigFlags(0x00034001); //GLFW_CURSOR_NORMAL
 	InitWindow(WIDTH, HEIGHT, TITLE);
 	SetTargetFPS(GetMonitorRefreshRate(GetCurrentMonitor()) * 2);
-	HideCursor();
+	// HideCursor();
 	DisableCursor();
 	GuiLoadStyle("./lib/raygui/styles/cyber/cyber.rgs");
 	SetExitKey(KEY_NULL); // disabling quit on "KEY_ESCAPE" press
@@ -44,7 +44,6 @@ int main(int argc, char **argv)
 		d_time = GetFrameTime();
 		// drawing
 		BeginDrawing();
-		ClearBackground(BLACK);
 
 		view_3d(/* local_player,  */ local_settings);
 		view(local_player, local_settings);
@@ -53,6 +52,7 @@ int main(int argc, char **argv)
 
 		DrawFPS(GetScreenWidth() - 80, GetScreenHeight() - 20);
 
+		ClearBackground(BLACK);
 		EndDrawing();
 	}
 

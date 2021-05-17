@@ -66,7 +66,7 @@ void p_controls(Player *player, Settings *settings)
 	if (mouse_diff < -player->ray_length)
 		mouse_diff = -player->ray_length;
 	float angular_distance = (acos((mouse_diff / player->ray_length)) - 90 * (PI / 180));
-	if (GetMousePosition().x != WIDTH / 2)
+	if (GetMousePosition().x != WIDTH / 2 && movement_enabled)
 		SetMousePosition(WIDTH / 2, 0);
 	player->angle += -angular_distance * (settings->mouse_sensibility / 100);
 	for (int i = 0; i < settings->ray_count; i++)
