@@ -9,7 +9,7 @@
 
 double d_time;
 // some global bools
-bool display_settings = false, movement_enabled = true;
+bool display_settings = false, movement_enabled = true, vsync = true;
 
 void log_level() {}
 

@@ -34,12 +34,14 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 	settings->ray_count = ray_count;
 	settings->speed = speed;
 	settings->mouse_sensibility = mouse_sensibility;
+	settings->vsync = true;
+	settings->player_map_icon = true; // if true the triangle will be displayed, else the circle
 	sprintf(settings->user_name, "%s", user_name);
 }
 
 void player(Player *player, Settings *settings)
 {
-	// DrawCircleV(player->position, 5, GREEN);
+	DrawCircleV(player->position, 5 * !settings->player_map_icon, BLUE);
 	p_controls(player, settings);
 }
 
@@ -97,11 +99,11 @@ void p_collide(Player *player, Settings *settings, Vector2 speed)
 void p_draw_on_map(Player *player, Settings *settings)
 {
 	// the triangle's vertices are named clockwise from A to C
-	Vector2 t_A = {7 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
-				   7 * sinf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.y};
-	Vector2 t_B = {5 * cosf(player->angle + 3.0f) + player->position.x,
-				   5 * sinf(player->angle + 3.0f) + player->position.y};
-	Vector2 t_C = {5 * cosf(player->angle - 1.1f) + player->position.x,
-				   5 * sinf(player->angle - 1.1f) + player->position.y};
+	Vector2 t_A = {6 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
+				   6 * sinf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.y};
+	Vector2 t_B = {3 * cosf(player->angle + 3.0f) + player->position.x,
+				   3 * sinf(player->angle + 3.0f) + player->position.y};
+	Vector2 t_C = {3 * cosf(player->angle - 1.1f) + player->position.x,
+				   3 * sinf(player->angle - 1.1f) + player->position.y};
 	DrawTriangle(t_B, t_A, t_C, BLUE);
 }

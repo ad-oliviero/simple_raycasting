@@ -16,6 +16,8 @@ typedef struct
 	float fov;
 	float mouse_sensibility;
 	int ray_count;
+	bool vsync;
+	bool player_map_icon;
 	char user_name[128];
 	float distance[360];
 } Settings;
