@@ -41,11 +41,11 @@ void view(Player *player, Settings *settings)
 		{
 			collision_point = (Vector2){0, 0};
 			// cast_rays(player->rays[i], player->position, map1_s[j], map1_e[j], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
-			cast_rays(player->rays[i], player->position, linestart_s[j], linend_s[j], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
+			// cast_rays(player->rays[i], player->position, linestart_s[j], linend_s[j], &collision_point);
 			if (collision_point.x && collision_point.y)
 			{
 				float distance = sqrt(pow(player->position.x - collision_point.x, 2) + pow(player->position.y - collision_point.y, 2));
@@ -76,7 +76,8 @@ void view_3d(Player *player, Settings *settings)
 		float alpha = map_value(settings->distance[i], 0, 200, 1, -0.01);
 
 		// we will use this to remove fisheye effect
-		float norm_distance = settings->distance[i] * 2;
+		player->ray_angle_from_start[i] = (settings->fov * PI / 180.0f * i / settings->ray_count) + player->angle;
+		float norm_distance = settings->distance[i] * (1 + (sin(1.57 - player->ray_angle_from_start[i])) * settings->fisheye_correction);
 
 		// drawing every "3d" line
 		DrawLineEx((Vector2){i * distance_width + 1, norm_distance * (norm_distance < HEIGHT / 2) + HEIGHT / 2 * (norm_distance > HEIGHT / 2)},

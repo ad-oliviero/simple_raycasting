@@ -4,7 +4,6 @@ typedef struct
 {
 	Vector2 position;
 	float angle;
-	float ray_angle_from_center[RAY_MAX_COUNT];
 	float ray_angle_from_start[RAY_MAX_COUNT];
 	float distance_between_rays;
 	Vector2 colliding_rays[RAY_MAX_COUNT];

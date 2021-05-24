@@ -19,11 +19,6 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 		player->rays[i].x = settings->ray_length * cosf(player->ray_angle_from_start[i]) + player->position.x;
 		player->rays[i].y = settings->ray_length * sinf(player->ray_angle_from_start[i]) + player->position.y;
 	}
-	for (int i = 1; i < settings->ray_count / 2 + 1; i++)
-	{
-		player->ray_angle_from_center[180 - i] = (i * PI / 180);
-		player->ray_angle_from_center[180 + i] = (i * PI / 180);
-	}
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
 }
 
