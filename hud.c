@@ -39,7 +39,7 @@ void draw_hud(Player *player, Settings *settings)
 	// DrawCircle(WIDTH / 2, HEIGHT / 2, 4, BLACK);
 }
 
-void draw_map(/*Map *map*/ Player *player, Settings *settings)
+void draw_map(/*Map *map,*/ Player *player, Settings *settings)
 {
 	DrawRectangleRec((Rectangle){10, 10, 225, 150}, WHITE); // map background
 	// for (int i = 0; i < 4; i++)DrawLineEx(border_s[i], border_e[i], 3, RED); // map background
@@ -57,8 +57,8 @@ void draw_map(/*Map *map*/ Player *player, Settings *settings)
 		linend_s[i].y += 45;
 	}
 
-	// for (int i = 0; i < MAP_SIDES; i++)
-	// DrawLineEx(linestart_s[i], linend_s[i], 1, BLACK);
+	for (int i = 0; i < MAP_SIDES; i++)
+		DrawLineEx(linestart_s[i], linend_s[i], 1, BLACK);
 	// DrawLineEx(map1_s[0], map1_e[0], 1, WHITE);
 	// DrawLineEx(map1_s[1], map1_e[1], 1, WHITE);
 	// DrawLineEx(map1_s[2], map1_e[2], 1, WHITE);

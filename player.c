@@ -30,8 +30,8 @@ void init_settings(Settings *settings, const char *user_name, float fov, int ray
 	settings->speed = speed;
 	settings->mouse_sensibility = mouse_sensibility;
 	settings->vsync = true;
-	settings->directional_rays_enabled = true; // if true the triangle will be displayed, else the circle
-	settings->fisheye_correction = true;
+	settings->directional_rays_enabled = true; // if true the directional_rays will be displayed, else the circle
+	settings->fisheye_correction = false;
 	settings->show_rays = false;
 	sprintf(settings->user_name, "%s", user_name);
 }
