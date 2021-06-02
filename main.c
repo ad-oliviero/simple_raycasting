@@ -21,9 +21,8 @@ int main(int argc, char **argv)
 		printf("%s ", argv[i]);
 	printf("\n");
 #endif
-	const int tmp_ray_count = 360;
-	Player *local_player = (Player *)malloc(sizeof(Player));		 // + sizeof(int[tmp_ray_count]);
-	Settings *local_settings = (Settings *)malloc(sizeof(Settings)); // + sizeof(int[tmp_ray_count]);
+	Player *local_player = (Player *)malloc(sizeof(Player));
+	Settings *local_settings = (Settings *)malloc(sizeof(Settings));
 	// initializing raylib
 	SetTraceLogCallback(log_level);
 	// SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -35,7 +34,7 @@ int main(int argc, char **argv)
 	GuiLoadStyle("./lib/raygui/styles/cyber/cyber.rgs");
 	SetExitKey(KEY_NULL); // disabling quit on "KEY_ESCAPE" press
 	// initializing local variables for player and settings
-	init_settings(local_settings, "Name", 100, tmp_ray_count, 40, 38);
+	init_settings(local_settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
 	init_player(local_player, local_settings, 100, 50, -45 * PI / 180);
 
 	// main game loop

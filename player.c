@@ -1,6 +1,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <math.h>
 #include "lib/raylib/include/raylib.h"
 #include "headers/config.h"
@@ -22,7 +23,45 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
 }
 
-void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility)
+void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name)
+{
+	FILE *settings_file = fopen(settings_file_name, "r");
+	load_default_settings(settings, "Player", 100, 360, 40, 38);
+	if (settings_file != NULL)
+	{
+		char line_buffer[256];
+		while (fgets(line_buffer, sizeof(line_buffer), settings_file))
+		{
+			char buffer[128] = {0};
+
+			sscanf(line_buffer, "username=%s", settings->user_name);
+
+			// if (sscanf(line_buffer, "vsync=%[truefalse]", buffer))
+			// 	settings->vsync = strcmp(buffer, "false");
+			// if (sscanf(line_buffer, "directional_rays=%[truefalse]", buffer))
+			// 	settings->directional_rays_enabled = strcmp(buffer, "false");
+			// if (sscanf(line_buffer, "fisheye=%[truefalse]", buffer))
+			// 	settings->fisheye_correction = !strcmp(buffer, "false");
+			// if (sscanf(line_buffer, "show_rays=%[truefalse]", buffer))
+			// 	settings->show_rays = strcmp(buffer, "false");
+
+			sscanf(line_buffer, "vsync=%i", &settings->vsync);
+			sscanf(line_buffer, "directional_rays=%i", &settings->directional_rays_enabled);
+			sscanf(line_buffer, "fisheye=%i", &settings->fisheye_correction);
+			sscanf(line_buffer, "show_rays=%i", &settings->show_rays);
+
+			sscanf(line_buffer, "fov=%f", &settings->fov);
+			sscanf(line_buffer, "ray_count=%i", &settings->ray_count);
+			// sscanf(line_buffer, "ray_length=%i", &settings->ray_length);
+			settings->ray_length = 200;
+			sscanf(line_buffer, "speed=%f", &settings->speed);
+			sscanf(line_buffer, "mouse_sensibility=%f", &settings->mouse_sensibility);
+		}
+		fclose(settings_file);
+	}
+}
+
+void load_default_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility)
 {
 	settings->fov = fov;
 	settings->ray_count = ray_count;

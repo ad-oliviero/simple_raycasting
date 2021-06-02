@@ -35,7 +35,7 @@ void draw_hud(Player *player, Settings *settings)
 			DisableCursor();
 	}
 	if (display_settings)
-		draw_settings(settings);
+		draw_settings(settings, SETTINGS_FILE_LOCATION);
 	// DrawCircle(WIDTH / 2, HEIGHT / 2, 4, BLACK);
 }
 
@@ -66,7 +66,7 @@ void draw_map(/*Map *map,*/ Player *player, Settings *settings)
 	p_draw_on_map(player, settings);
 }
 
-void draw_settings(Settings *settings)
+void draw_settings(Settings *settings, char *settings_file_name)
 {
 	Rectangle main_settings_rec = {WIDTH / 2 - (WIDTH / 4), HEIGHT / 2 - (HEIGHT / 4), WIDTH / 2, HEIGHT / 2},
 			  ray_count_slider = {main_settings_rec.x + 10, main_settings_rec.y + 35, 200, 20},
@@ -76,7 +76,10 @@ void draw_settings(Settings *settings)
 			  mouse_sensibility_slider = {main_settings_rec.x + 10, fov_slider.y + 30, 200, 20},
 			  fisheye_toggle = {main_settings_rec.x + 10, mouse_sensibility_slider.y + 30, 200, 20},
 			  show_rays_toggle = {main_settings_rec.x + 10, fisheye_toggle.y + 30, 200, 20},
-			  quit_button = {main_settings_rec.x + main_settings_rec.width / 2 - 35, main_settings_rec.y + main_settings_rec.height - 30, 70, 20};
+			  quit_button = {main_settings_rec.x + main_settings_rec.width / 2 - 35, main_settings_rec.y + main_settings_rec.height - 30, 70, 20},
+			  save_settings_button = {main_settings_rec.x + 10, main_settings_rec.y + main_settings_rec.height - 90, 150, 20},
+			  load_settings_file_button = {main_settings_rec.x + 10, save_settings_button.y + 30, 150, 20},
+			  load_default_settings_button = {main_settings_rec.x + 10, load_settings_file_button.y + 30, 150, 20};
 
 	DrawRectangle(0, 0, WIDTH, HEIGHT, ColorAlpha(BLACK, 0.7)); // obfuscate background
 	// GuiGroupBox(main_settings_rec, "Settings");
@@ -102,6 +105,27 @@ void draw_settings(Settings *settings)
 			CloseWindow();
 			exit(0);
 		}
+		if (GuiButton(save_settings_button, "Save settings"))
+		{
+			FILE *settings_file = fopen(settings_file_name, "w");
+			fprintf(settings_file,
+					"fov=%i\n"
+					"ray_count=%i\n"
+					"ray_length=%i\n"
+					"speed=%f\n"
+					"mouse_sensibility=%f\n"
+					"vsync=%i\n"
+					"directional_rays=%i\n"
+					"fisheye=%i\n"
+					"show_rays=%i\n"
+					"username=%s",
+					(int)settings->fov, settings->ray_count, settings->ray_length, settings->speed, settings->mouse_sensibility, settings->vsync, settings->directional_rays_enabled, settings->fisheye_correction, settings->show_rays, settings->user_name);
+			fclose(settings_file);
+		}
+		if (GuiButton(load_settings_file_button, "Load settings from file"))
+			init_settings(settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
+		if (GuiButton(load_default_settings_button, "Load default settings"))
+			load_default_settings(settings, "Name", 100, 360, 40, 38);
 	}
 	else
 	{
