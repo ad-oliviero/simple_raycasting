@@ -34,7 +34,7 @@ int main(int argc, char **argv)
 	GuiLoadStyle("./lib/raygui/styles/cyber/cyber.rgs");
 	SetExitKey(KEY_NULL); // disabling quit on "KEY_ESCAPE" press
 	// initializing local variables for player and settings
-	init_settings(local_settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
+	load_settings(local_settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
 	init_player(local_player, local_settings, 100, 50, -45 * PI / 180);
 
 	// main game loop

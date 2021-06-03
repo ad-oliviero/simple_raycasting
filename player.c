@@ -23,9 +23,20 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
 }
 
-void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name)
+void load_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name)
 {
-	FILE *settings_file = fopen(settings_file_name, "r");
+	FILE *settings_file;
+	if (settings_file_name[0] == '~')
+	{
+		char temp[256] = "/home/";
+		settings_file_name++;
+		strcat(temp, getenv("USER"));
+		strcat(temp, settings_file_name);
+		settings_file = fopen(temp, "r");
+	}
+	else
+		settings_file = fopen(settings_file_name, "r");
+
 	load_default_settings(settings, "Player", 100, 360, 40, 38);
 	if (settings_file != NULL)
 	{

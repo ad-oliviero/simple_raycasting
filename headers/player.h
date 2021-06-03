@@ -28,7 +28,7 @@ typedef struct
 
 // player by reference, x and y coordinates, angle, fov, ray_count, speed (150 recommended)
 void init_player(Player *player, Settings *settings, float x, float y, float angle);
-void init_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name);
+void load_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name);
 void load_default_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility);
 void player(Player *player, Settings *settings);
 void p_controls(Player *player, Settings *settings);

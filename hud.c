@@ -107,7 +107,17 @@ void draw_settings(Settings *settings, char *settings_file_name)
 		}
 		if (GuiButton(save_settings_button, "Save settings"))
 		{
-			FILE *settings_file = fopen(settings_file_name, "w");
+			FILE *settings_file;
+			if (settings_file_name[0] == '~')
+			{
+				char temp[256] = "/home/";
+				settings_file_name++;
+				strcat(temp, getenv("USER"));
+				strcat(temp, settings_file_name);
+				settings_file = fopen(temp, "w");
+			}
+			else
+				settings_file = fopen(settings_file_name, "w");
 			fprintf(settings_file,
 					"fov=%i\n"
 					"ray_count=%i\n"
@@ -123,7 +133,7 @@ void draw_settings(Settings *settings, char *settings_file_name)
 			fclose(settings_file);
 		}
 		if (GuiButton(load_settings_file_button, "Load settings from file"))
-			init_settings(settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
+			load_settings(settings, "Name", 100, 360, 40, 38, SETTINGS_FILE_LOCATION);
 		if (GuiButton(load_default_settings_button, "Load default settings"))
 			load_default_settings(settings, "Name", 100, 360, 40, 38);
 	}
