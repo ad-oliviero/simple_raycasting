@@ -1,3 +1,5 @@
+#ifndef MAP_H
+#define MAP_H
 /*
 In this file you must define all the map lines (in arrays) or just create a function to generate it randomly
 */
@@ -18,3 +20,4 @@ Vector2 border_e[4] = {{10, 160}, {235, 160}, {235, 10}, {235, 160}};
 
 Vector2 map1_s[4] = {{300, 300}, {600, 300}, {300, 600}, {300, 300}};
 Vector2 map1_e[4] = {{300, 600}, {600, 600}, {600, 600}, {600, 300}};
+#endif

@@ -1,5 +1,19 @@
+#ifndef PLAYER_H
+#define PLAYER_H
 #include "../lib/raylib/include/raylib.h"
+#include "fighting.h"
 #define RAY_MAX_COUNT 1000
+
+typedef struct
+{
+	Vector2 position;
+	Vector2 look_direction;
+	float angle;
+	int damage;
+	int max_bullets;
+	int bullets;
+} Gun;
+
 typedef struct
 {
 	Vector2 position;
@@ -9,6 +23,7 @@ typedef struct
 	Vector2 colliding_rays[RAY_MAX_COUNT];
 	Vector2 directional_rays[RAY_MAX_COUNT];
 	Vector2 rays[RAY_MAX_COUNT];
+	Gun *gun;
 } Player;
 
 typedef struct
@@ -34,3 +49,5 @@ void player(Player *player, Settings *settings);
 void p_controls(Player *player, Settings *settings);
 void p_collide(Player *player, Settings *settings, Vector2 speed);
 void p_draw_on_map(Player *player, Settings *settings);
+void init_gun(Gun *gun, int damage, int max_bullets);
+#endif

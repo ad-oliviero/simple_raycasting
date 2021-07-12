@@ -1,3 +1,5 @@
+#ifndef CONFIG_H
+#define CONFIG_H
 #include "../lib/raylib/include/raylib.h"
 #define TITLE "RayCasting"
 #define MAP_SIDES (int)(sizeof linestart / sizeof linestart[0])
@@ -6,3 +8,4 @@
 #define SETTINGS_FILE_LOCATION "~/.config/smprc_settings"
 
 extern double d_time;
+#endif

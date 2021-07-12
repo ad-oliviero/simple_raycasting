@@ -5,6 +5,7 @@
 #include <math.h>
 #include "lib/raylib/include/raylib.h"
 #include "headers/config.h"
+#include "headers/fighting.h"
 #include "headers/player.h"
 
 extern bool movement_enabled;
@@ -21,10 +22,20 @@ void init_player(Player *player, Settings *settings, float x, float y, float ang
 		player->rays[i].y = settings->ray_length * sinf(player->ray_angle_from_start[i]) + player->position.y;
 	}
 	player->distance_between_rays = settings->fov * PI / 180.0f / settings->ray_count;
+	// init_gun(player->gun, 5, 19);
+}
+
+void init_gun(Gun *gun, int damage, int max_bullets)
+{
+	printf("AHBSD");
+	gun->damage = damage;
+	gun->max_bullets = max_bullets;
+	gun->bullets = max_bullets;
 }
 
 void load_settings(Settings *settings, const char *user_name, float fov, int ray_count, float speed, float mouse_sensibility, char *settings_file_name)
 {
+	load_default_settings(settings, user_name, fov, ray_count, speed, mouse_sensibility);
 	FILE *settings_file;
 	if (settings_file_name[0] == '~')
 	{
@@ -36,17 +47,14 @@ void load_settings(Settings *settings, const char *user_name, float fov, int ray
 	}
 	else
 		settings_file = fopen(settings_file_name, "r");
-
-	load_default_settings(settings, "Player", 100, 360, 40, 38);
 	if (settings_file != NULL)
 	{
 		char line_buffer[256];
 		while (fgets(line_buffer, sizeof(line_buffer), settings_file))
 		{
-			char buffer[128] = {0};
-
 			sscanf(line_buffer, "username=%s", settings->user_name);
 
+			// char buffer[128] = {0};
 			// if (sscanf(line_buffer, "vsync=%[truefalse]", buffer))
 			// 	settings->vsync = strcmp(buffer, "false");
 			// if (sscanf(line_buffer, "directional_rays=%[truefalse]", buffer))
