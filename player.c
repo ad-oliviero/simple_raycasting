@@ -9,6 +9,13 @@
 #include "headers/player.h"
 
 extern bool movement_enabled;
+extern Vector2 old_player_position, linestart_s[128], linend_s[128];
+
+Rectangle minimap_borders[4] = {
+	{.height = 150, .width = 10, .x = 0, .y = 10},
+	{.height = 150, .width = 10, .x = 235, .y = 10},
+	{.height = 10, .width = 225, .x = 10, .y = 160},
+	{.height = 10, .width = 225, .x = 10, .y = 0}};
 
 // player by reference, x and y coordinates, angle
 void init_player(Player *player, Settings *settings, float x, float y, float angle)
@@ -146,30 +153,18 @@ void p_controls(Player *player, Settings *settings)
 
 void p_collide(Player *player, Settings *settings, Vector2 speed)
 {
-	// minimap borders
-	player->position.x +=
-		2 * speed.x * (player->position.x < 15) - 2 * speed.x * (player->position.x > 230);
-	player->position.y +=
-		2 * speed.y * (player->position.y < 15) - 2 * speed.y * (player->position.y > 155);
-	/* for (int i = 0; i < settings->ray_count; i++)
-	{
-		if (settings->distance[i] < 4)
-		{
-			player->position.x += 2 * speed.x;
-		}
-	} */
+	// borders collision
+	for (int i = 0; i < 4; i++)
+		if (CheckCollisionCircleRec(player->position, 3, minimap_borders[i]))
+			player->position = old_player_position;
+	// actual map collision
+	for (int i = 0; i < 128; i++)
+		if (CheckCollisionLines(linestart_s[i], linend_s[i], (Vector2){player->position.x + 5, player->position.y + 5}, (Vector2){player->position.x - 5, player->position.y - 5}, NULL) || CheckCollisionLines(linestart_s[i], linend_s[i], (Vector2){player->position.x - 5, player->position.y + 5}, (Vector2){player->position.x + 5, player->position.y - 5}, NULL))
+			player->position = old_player_position;
 }
 
 void p_draw_on_map(Player *player, Settings *settings)
 {
-	// the triangle's vertices are named clockwise from A to C
-	/* Vector2 t_A = {6 * cosf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.x,
-				   6 * sinf(player->ray_angle_from_center[settings->ray_count / 2] + player->angle + (settings->fov / 2 * PI / 180)) + player->position.y};
-	Vector2 t_B = {3 * cosf(player->angle + 3.0f) + player->position.x,
-				   3 * sinf(player->angle + 3.0f) + player->position.y};
-	Vector2 t_C = {3 * cosf(player->angle - 1.1f) + player->position.x,
-				   3 * sinf(player->angle - 1.1f) + player->position.y};
-	DrawTriangle(t_B, t_A, t_C, BLUE); */
 	// DrawCircleV(player->position, 3, BLUE);
 	DrawCircleGradient(player->position.x, player->position.y, 10, BLUE, ColorAlpha(WHITE, 0));
 	for (int i = 0; i < settings->ray_count * settings->show_rays; i++)

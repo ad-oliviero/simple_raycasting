@@ -8,6 +8,7 @@
 #include "headers/hud.h"
 
 double d_time;
+Vector2 old_player_position = {0};
 // some global bools
 bool display_settings = false, movement_enabled = true;
 
@@ -41,6 +42,7 @@ int main(int argc, char **argv)
 	while (!WindowShouldClose())
 	{
 		d_time = GetFrameTime();
+		old_player_position = local_player->position;
 		// drawing
 		BeginDrawing();
 

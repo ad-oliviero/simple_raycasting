@@ -41,10 +41,10 @@ void view(Player *player, Settings *settings)
 		{
 			collision_point = (Vector2){0, 0};
 			// cast_rays(player->rays[i], player->position, map1_s[j], map1_e[j], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
-			// cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[0], border_e[0], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[1], border_e[1], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[2], border_e[2], &collision_point);
+			cast_rays(player->rays[i], player->position, border_s[3], border_e[3], &collision_point);
 			cast_rays(player->rays[i], player->position, linestart_s[j], linend_s[j], &collision_point);
 			if (collision_point.x && collision_point.y)
 			{
